@@ -1,0 +1,63 @@
+<div class="template">
+    <h3 style="margin-top: 0.5em;min-height: 1em;">Tilføj en ny løber</h3>
+    <hr />
+    <div>
+      <form id="form" style="max-width: 800px;">
+        <div class="row">
+          <div class="col-md-2">
+            <label for="first-name">Fornavn</label>
+          </div>
+          <div class="col-md-10">
+            <input id="first-name" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label for="last-name">Efternavn</label>
+          </div>
+          <div class="col-md-10">
+            <input id="last-name" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <label for="birthdate">Fødselsdag</label>
+          </div>
+          <div class="col-md-10">
+            <input type=date id="birthdate" required>
+          </div>
+          <div class="col-md-2">
+            <label for="club-mark">Klubmærke</label>
+          </div>
+          <div class="col-md-4">
+            <input type=number id="club-mark">
+          </div>
+          <div class="col-md-2">
+            <label for="comp-number">Konkurrencenummer</label>
+          </div>
+          <div class="col-md-4">
+            <input type=number id="comp-number">
+          </div>
+          <div class="col-md-2">
+            <label for="comp-number">Forenings ID</label>
+          </div>
+          <div class="col-md-4">
+            <input type=number id="club-id">
+          </div>
+        </div>
+        <div class="row">
+          <p id="error-msg" style="color:red"></p>
+          <p id="success-msg" style="color:rgb(60, 255, 0)"></p>
+          <p id="added-athlete"></p>
+        </div>
+        <div class="row">
+          <p id="status" style="min-height: 1em;margin-top:0.5em;"> </p>
+          <div style="margin-top:2em;">
+            <button id="btn-submit-athlete" class="btn btn-dark">Gem Løbere</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  

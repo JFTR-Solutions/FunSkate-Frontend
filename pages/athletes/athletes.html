@@ -1,5 +1,6 @@
 <div class="template">
     <h1>Løbere</h1>
+    <input type="text" id="search-input" placeholder="Søg...">
     <table class="table">
       <thead>
         <tr>
@@ -12,7 +13,53 @@
         </tr>
       </thead>
       <div id="loading"></div>
-      <tbody id="table-rows">
+      <tbody id="table-rows"></tbody>
     </table>
     <p id="error" style="color:red"></p>
+
+  <!-- Modal -->
+  <div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="edit-modal-label"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="edit-modal-label">Edit Athlete</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-form">
+          <div class="mb-3">
+            <label for="edit-lastName" class="form-label">Efternavn</label>
+            <input type="text" class="form-control" id="edit-lastName" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-firstName" class="form-label">Fornavn</label>
+            <input type="text" class="form-control" id="edit-firstName" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-birthdate" class="form-label">Fødselsdag</label>
+            <input type="date" class="form-control" id="edit-birthdate" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-clubMark" class="form-label">Klubmærke</label>
+            <input type="text" class="form-control" id="edit-clubMark" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-competitionNumber" class="form-label">Løbernummer</label>
+            <input type="number" class="form-control" id="edit-competitionNumber" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-club" class="form-label">Klub</label>
+            <input type="text" class="form-control" id="edit-club" required>
+          </div>
+        </form>
+        <p id="edit-status">&nbsp;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="edit-save-btn" type="button" class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
   </div>
+</div>
+</div>

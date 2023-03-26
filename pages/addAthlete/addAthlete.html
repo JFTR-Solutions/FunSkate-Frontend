@@ -29,20 +29,39 @@
           <div class="col-md-2">
             <label for="club-mark">Klubmærke</label>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-10">
             <input type=number id="club-mark">
           </div>
           <div class="col-md-2">
-            <label for="comp-number">Konkurrencenummer</label>
+            <label for="comp-number">Løbernummer</label>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-10">
             <input type=number id="comp-number">
           </div>
           <div class="col-md-2">
-            <label for="comp-number">Forenings ID</label>
+            <label for="comp-number">Klub</label>
           </div>
-          <div class="col-md-4">
-            <input type=number id="club-id">
+          <div class="col-md-10">
+            <select name="comp-number" id="club-id">
+              <option value="1">Aalborg Skøjteløberforening</option>
+              <option value="2">Aarhus Skøjteklub</option>
+              <option value="3">Esbjerg Skøjteklub</option>
+              <option value="4">Frederikshavn Skøjteforening</option>
+              <option value="5">Gentofte Kunstskøjteløber Forening</option>
+              <option value="6">Gladsaxe Skøjteløber-Forening</option>
+              <option value="7">Herlev Idrætsforenings Kunstskøjte Afdeling</option>
+              <option value="8">Herning Skøjteløber Forening</option>
+              <option value="9">Hvidovre Skøjte Klub</option>
+              <option value="10">Hørsholm Kunstskøjteløber Forening</option>
+              <option value="11">Odense Skøjteklub</option>
+              <option value="12">Rødovre Skøjte- og Ishockey Klub</option>
+              <option value="13">Silkeborg Skøjteløberforening</option>
+              <option value="14">Skøjteklub København</option>
+              <option value="15">Skøjte og Sport Forening Nord</option>
+              <option value="16">Tårnby Skøjteklub</option>
+              <option value="17">Vojens Skøjteklub</option>
+              <option value="18">Ørestad Skøjteklub</option>
+            </select>
           </div>
         </div>
         <div class="row">
@@ -53,7 +72,7 @@
         <div class="row">
           <p id="status" style="min-height: 1em;margin-top:0.5em;"> </p>
           <div style="margin-top:2em;">
-            <button id="btn-submit-athlete" class="btn btn-dark">Gem Løbere</button>
+            <button id="btn-submit-athlete" class="btn btn-dark">Gem Løber</button>
           </div>
         </div>
       </form>

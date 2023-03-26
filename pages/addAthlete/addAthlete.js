@@ -9,7 +9,11 @@ let clubById = null;
 export async function initAddAthlete() {
   clearInput();
   clearMsg();
-  document.getElementById("btn-submit-athlete").onclick = addAthlete;
+  //document.getElementById("btn-submit-athlete").onclick = addAthlete; // This is the old way which doesn't work with the club select box
+  document.getElementById("btn-submit-athlete").addEventListener("click", function(event) {
+    event.preventDefault(); // prevent the default form submission behavior when clicking on the submit button
+    addAthlete();
+  });
 }
 
 
@@ -23,9 +27,6 @@ function fetchClub(){
 
     return fetch(CLUB_URL+"/"+id, options)
     .then(res => {
-        if(!res.ok){
-            return Promise.reject("Klub ikke fundet") 
-        }
         return res.json()
     })
     .then(data => {

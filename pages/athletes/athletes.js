@@ -1,13 +1,17 @@
 import { API_URL } from "../../settings.js"
 import { hideLoading, sanitizeStringWithTableRows, showLoading } from "../../utils.js";
 const URL = API_URL + "/athletes"
+const CLUB_URL = API_URL + "/clubs"
+
+let clubById = null;
 
 export async function initAthletes() {
     clearTable();
     showLoading();
     try {
       const athletes = await fetch(URL).then((res) => res.json());
-      showClubs(athletes);
+      showTable(athletes);
+      addSearchListener(athletes);
     } catch (err) {
       hideLoading();
       alert(err.message)
@@ -15,19 +19,21 @@ export async function initAthletes() {
       hideLoading();
     }
   }
-
-  function showClubs(athletes){
-    const tableRows = athletes.map((athlete) => `
-      <tr>
-      <td>${athlete.lastName}</td>
-      <td>${athlete.firstName}</td>
-      <td>${athlete.birthdate}</td>
-      <td>${athlete.clubMark}</td>
-      <td>${athlete.competitionNumber}</td>
-      <td>${athlete.club.name}</td>
-      <td><img src="/images/clubLogos/${athlete.club.id}.png" width=60"></td>
-      </tr>`
-      ).join("");
+  function showTable(athletes) {
+    const tableRows = athletes
+      .map(
+        (athlete) => `
+        <tr>
+          <td>${athlete.lastName}</td>
+          <td>${athlete.firstName}</td>
+          <td>${athlete.birthdate}</td>
+          <td>${athlete.clubMark}</td>
+          <td>${athlete.competitionNumber}</td>
+          <td>${athlete.club.name}</td>
+          <td><img src="/images/clubLogos/${athlete.club.id}.png" width=60"></td>
+        </tr>`
+      )
+      .join("");
     const tableRowsSan = sanitizeStringWithTableRows(tableRows);
     document.getElementById("table-rows").innerHTML = tableRowsSan;
   }
@@ -35,3 +41,18 @@ export async function initAthletes() {
   function clearTable(){
     document.getElementById("table-rows").innerHTML = "";
   }
+
+  function addSearchListener(athletes) {
+    const searchInput = document.getElementById("search-input");
+    searchInput.addEventListener("input", () => {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filteredAthletes = athletes.filter(athlete =>
+        Object.values(athlete).some(value =>
+          value.toString().toLowerCase().includes(searchTerm)
+        ) || athlete.club.name.toLowerCase().includes(searchTerm)
+      );
+      showTable(filteredAthletes);
+    });
+  }
+
+ 

@@ -9,6 +9,7 @@ import {
 import { initClubs } from "./pages/clubs/clubs.js";
 import { initAthletes } from "./pages/athletes/athletes.js";
 import { initAddAthlete } from "./pages/addAthlete/addAthlete.js";
+import { initCompetitions } from "./pages/competitions/competition.js";
 
 
 window.addEventListener("load", async () => {
@@ -16,6 +17,7 @@ window.addEventListener("load", async () => {
   const templateAthletes = await loadHtml("./pages/athletes/athletes.html");
   const templateNotFound = await loadHtml("./pages/notFound/notFound.html");
   const templateAddAthlete = await loadHtml("./pages/addAthlete/addAthlete.html");
+  const templateCompetition = await loadHtml("./pages/competitions/competition.html");
 
   adjustForMissingHash();
 
@@ -47,6 +49,10 @@ window.addEventListener("load", async () => {
       "/add-athlete": () => {
         renderTemplate(templateAddAthlete, "content");
         initAddAthlete();
+      },
+      "/competitions": () => {
+        renderTemplate(templateCompetition, "content")
+        initCompetitions();
       },
     })
     .notFound(() => {

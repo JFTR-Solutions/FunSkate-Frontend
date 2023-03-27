@@ -10,6 +10,7 @@ import { initClubs } from "./pages/clubs/clubs.js";
 import { initAthletes } from "./pages/athletes/athletes.js";
 import { initAddAthlete } from "./pages/addAthlete/addAthlete.js";
 import { initCompetitions } from "./pages/competitions/competition.js";
+import { initAddParticipant } from "./pages/addParticipant/addParticipant.js";
 
 
 window.addEventListener("load", async () => {
@@ -18,6 +19,7 @@ window.addEventListener("load", async () => {
   const templateNotFound = await loadHtml("./pages/notFound/notFound.html");
   const templateAddAthlete = await loadHtml("./pages/addAthlete/addAthlete.html");
   const templateCompetition = await loadHtml("./pages/competitions/competition.html");
+  const templateAddParticipant = await loadHtml("./pages/addParticipant/addParticipant.html")
 
   adjustForMissingHash();
 
@@ -53,6 +55,10 @@ window.addEventListener("load", async () => {
       "/competitions": () => {
         renderTemplate(templateCompetition, "content")
         initCompetitions();
+      },
+      "/add-participant/:competitionId": (match) => {
+        renderTemplate(templateAddParticipant, "content")
+        initAddParticipant(match);
       },
     })
     .notFound(() => {

@@ -1,0 +1,142 @@
+<div class="template">
+  <div id="comp-details"></div>
+  <div id="athletes-available">
+    <h1>Ikke deltagende løbere</h1>
+    <input type="text" id="search-input" placeholder="Søg..." />
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Efternavn</th>
+          <th>Fornavn</th>
+          <th>Fødselsdag</th>
+          <th>Klubmærke</th>
+          <th>Løbernummer</th>
+          <th>Klub</th>
+        </tr>
+      </thead>
+      <div id="loading"></div>
+      <tbody id="table-rows-not-part"></tbody>
+    </table>
+    <p id="error" style="color: red"></p>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="edit-modal"
+      tabindex="-1"
+      aria-labelledby="edit-modal-label"
+      aria-hidden="true"
+      style="z-index: 1050"
+    >
+      <div class="modal-dialog" style="max-width: 800px; width: 80%">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="edit-modal-label">Rediger tilmeldt løber</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="edit-form">
+              <div class="mb-3">
+                <label for="edit-firstName" class="form-label">Fornavn</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="edit-firstName"
+                  required
+                  readonly="readonly"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="edit-lastName" class="form-label">Efternavn</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="edit-lastName"
+                  required
+                  readonly="readonly"
+                />
+              </div>
+              
+              <div class="mb-3">
+                <label for="edit-birthdate" class="form-label"
+                  >Fødselsdag</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="edit-birthdate"
+                  required
+                  readonly="readonly"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="edit-clubMark" class="form-label">Klubmærke</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="edit-clubMark"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="edit-competitionNumber" class="form-label"
+                  >Løbernummer</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="edit-competitionNumber"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="edit-club" class="form-label">Klub</label><br />
+                <input class="form-control" type="text" id="edit-club-name" required readonly="readonly"/>
+                <input hidden class="form-control" type="text" id="edit-club-id" required readonly="readonly"/>
+              </div>
+            </form>
+            <p id="edit-status">&nbsp;</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Luk
+            </button>
+            <button id="edit-save-btn" type="button" class="btn btn-primary">
+              Gem ændringer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="athletes-participating">
+    <h1>Deltagende løbere</h1>
+    <input type="text" id="search-input" placeholder="Søg..." />
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Efternavn</th>
+          <th>Fornavn</th>
+          <th>Fødselsdag</th>
+          <th>Klubmærke</th>
+          <th>Løbernummer</th>
+          <th>Klub</th>
+          <th></th>
+          <th>Fjern fra konkurrencen</th>
+        </tr>
+      </thead>
+      <div id="loading"></div>
+      <tbody id="table-rows-part"></tbody>
+    </table>
+    <p id="error" style="color: red"></p>
+  </div>
+</div>

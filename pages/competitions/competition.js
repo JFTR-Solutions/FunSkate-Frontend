@@ -120,19 +120,27 @@ async function createCompetition() {
 
   // Fetch the locations and populate the locationField
   const locations = await fetchLocations();
-  locationField.innerHTML = '<option value="" disabled selected>Vælg on lokation</option>';
-  
+  locationField.innerHTML =
+    '<option value="" disabled selected>Vælg on lokation</option>';
+
   // Add the rest of the options
   locations.forEach((location) => {
-    locationField.insertAdjacentHTML("beforeend", `<option value="${location.id}">${location.name}</option>`);
+    locationField.insertAdjacentHTML(
+      "beforeend",
+      `<option value="${location.id}">${location.name}</option>`
+    );
   });
 
   locationField.addEventListener("change", async () => {
     const location = await getLocationById(locationField.value);
     const postalCode = location.zipCode;
     const defaultCompetitionType = postalCode.charAt(0) >= 5 ? "Vest" : "Øst";
+    const compType = defaultCompetitionType === "Vest" ? "WEST" : "EAST";
     competitionTypeField.innerHTML = `
-      <option value="${defaultCompetitionType}" selected>${defaultCompetitionType.charAt(0).toUpperCase() + defaultCompetitionType.slice(1)}</option>
+      <option value="${compType}" selected>${
+      defaultCompetitionType.charAt(0).toUpperCase() +
+      defaultCompetitionType.slice(1)
+    }</option>
       <option value="finals">Finals</option>
     `;
   });

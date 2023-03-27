@@ -10,7 +10,16 @@ export async function initClubs() {
     clearBoxes();
     showLoading();
     try {
-      const clubs = await fetch(URL).then((res) => res.json());
+      const username = localStorage.getItem("username");
+      const token = localStorage.getItem("token");
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+      const clubs = await fetch(URL,options).then((res) => res.json());
       showBoxes(clubs);
     } catch (err) {
       hideLoading();

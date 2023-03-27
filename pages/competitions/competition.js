@@ -8,7 +8,7 @@ import {
 const URL = API_URL + "/competitions";
 let locationId = null;
 
-export async function initCompetitions() {
+export function initCompetitions() {
   if (checkAndRedirectIfNotLoggedIn()) {
     return;
   }
@@ -28,9 +28,9 @@ async function showTable() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
-    }
+    };
 
     const competitions = await fetch(URL, options).then((res) => res.json());
     createTable(competitions);
@@ -44,20 +44,19 @@ async function showTable() {
 }
 
 function fetchLocations() {
-  try{
+  try {
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
     const options = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
-    }
+    };
     const URL = API_URL + "/locations";
     return fetch(URL, options).then((res) => res.json());
-  }
-  catch(error){
+  } catch (error) {
     console.log(error.message);
   }
 }
@@ -176,7 +175,7 @@ async function createCompetition() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(competition),
     });

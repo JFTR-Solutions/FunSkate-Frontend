@@ -22,10 +22,12 @@ export async function initAddAthlete() {
 
 
 function fetchClub(){
+    const token = localStorage.getItem("token");
     const id = document.getElementById("club-id").value
     const options = {
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
     };
 

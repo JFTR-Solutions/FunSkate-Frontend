@@ -45,7 +45,7 @@ export function isLoggedIn() {
   }
 
   export function updateRestrictedLinks() {
-    const { role } = checkIfLoggedIn();
+    const role = localStorage.getItem("roles") || "";
   
     const adminLinks = document.querySelectorAll(".admin-link");
     adminLinks.forEach((link) => {
@@ -69,4 +69,3 @@ export function isLoggedIn() {
       }
     });
   }
-  

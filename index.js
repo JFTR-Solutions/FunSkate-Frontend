@@ -10,9 +10,14 @@ import { initClubs } from "./pages/clubs/clubs.js";
 import { initAthletes } from "./pages/athletes/athletes.js";
 import { initAddAthlete } from "./pages/addAthlete/addAthlete.js";
 import { initCompetitions } from "./pages/competitions/competition.js";
-import {initLogin} from "./pages/login/login.js";
-import { checkIfLoggedIn } from "./auth.js";
+import {initLogin, logout} from "./pages/login/login.js";
+import { checkIfLoggedIn, updateRestrictedLinks } from "./auth.js";
 
+const login = localStorage.getItem("token")
+if ((login)) {
+  document.getElementById("login-id").style.display = "none";
+  document.getElementById("logout-id").style.display = "block";
+}
 
 window.addEventListener("load", async () => {
   const templateClubs = await loadHtml("./pages/clubs/clubs.html");
@@ -75,6 +80,18 @@ window.addEventListener("load", async () => {
       renderTemplate(templateNotFound, "content");
     })
     .resolve();
+  router.hooks({
+    after: (params) => {
+      updateRestrictedLinks();
+    },
+  });
+  
+  const token = localStorage.getItem("token");
+  const roles = localStorage.getItem("roles");
+  
+  if (token && roles) {
+    updateRestrictedLinks();
+  }
 });
 
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {

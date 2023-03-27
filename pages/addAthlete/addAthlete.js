@@ -1,5 +1,6 @@
 import { API_URL } from "../../settings.js"
 import { encode} from "../../utils.js";
+import { checkAndRedirectIfNotLoggedIn } from "../../auth.js";
 const ATHLETE_URL = API_URL + "/athletes"
 const CLUB_URL = API_URL + "/clubs"
 
@@ -7,6 +8,9 @@ let clubById = null;
 
 
 export async function initAddAthlete() {
+    if (checkAndRedirectIfNotLoggedIn()) {
+        return;
+      }
   clearInput();
   clearMsg();
   //document.getElementById("btn-submit-athlete").onclick = addAthlete; // This is the old way which doesn't work with the club select box

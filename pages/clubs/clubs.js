@@ -1,8 +1,12 @@
 import { API_URL } from "../../settings.js"
+import { checkAndRedirectIfNotLoggedIn } from "../../auth.js";
 import { hideLoading, showLoading } from "../../utils.js";
 const URL = API_URL + "/clubs"
 
 export async function initClubs() {
+  if (checkAndRedirectIfNotLoggedIn()) {
+    return;
+  }
     clearBoxes();
     showLoading();
     try {
@@ -15,6 +19,8 @@ export async function initClubs() {
       hideLoading();
     }
   }
+
+
   
   function showBoxes(clubs) {
     const boxes = clubs.map((club) => `

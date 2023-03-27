@@ -108,4 +108,9 @@ export function renderTemplate(template, contentId) {
   export function hideLoading() {
     document.getElementById('loading').style.display = 'none';
   }
+
+  export function convertToEuropeanDate(dateString) {
+    const [year, month, day] = dateString.split("-");
+    return `${day}-${month}-${year}`;
+  }
   

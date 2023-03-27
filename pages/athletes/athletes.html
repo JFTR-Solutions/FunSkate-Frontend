@@ -1,83 +1,132 @@
 <div class="template">
-    <h1>Løbere</h1>
-    <input type="text" id="search-input" placeholder="Søg...">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Efternavn</th>
-          <th>Fornavn</th>
-          <th>Fødselsdag</th>
-          <th>Klubmærke</th>
-          <th>Løbernummer</th>
-          <th>Klub</th>
-        </tr>
-      </thead>
-      <div id="loading"></div>
-      <tbody id="table-rows"></tbody>
-    </table>
-    <p id="error" style="color:red"></p>
+  <h1>Løbere</h1>
+  <input type="text" id="search-input" placeholder="Søg..." />
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Efternavn</th>
+        <th>Fornavn</th>
+        <th>Fødselsdag</th>
+        <th>Klubmærke</th>
+        <th>Løbernummer</th>
+        <th>Klub</th>
+      </tr>
+    </thead>
+    <div id="loading"></div>
+    <tbody id="table-rows"></tbody>
+  </table>
+  <p id="error" style="color: red"></p>
 
   <!-- Modal -->
-  <div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="edit-modal-label" aria-hidden="true" style="z-index: 1050;">
-  <div class="modal-dialog" style="max-width: 800px; width: 80%;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="edit-modal-label">Edit Athlete</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="edit-form">
-          <div class="mb-3">
-            <label for="edit-lastName" class="form-label">Efternavn</label>
-            <input type="text" class="form-control" id="edit-lastName" required>
-          </div>
-          <div class="mb-3">
-            <label for="edit-firstName" class="form-label">Fornavn</label>
-            <input type="text" class="form-control" id="edit-firstName" required>
-          </div>
-          <div class="mb-3">
-            <label for="edit-birthdate" class="form-label">Fødselsdag</label>
-            <input type="date" class="form-control" id="edit-birthdate" required>
-          </div>
-          <div class="mb-3">
-            <label for="edit-clubMark" class="form-label">Klubmærke</label>
-            <input type="text" class="form-control" id="edit-clubMark" required>
-          </div>
-          <div class="mb-3">
-            <label for="edit-competitionNumber" class="form-label">Løbernummer</label>
-            <input type="number" class="form-control" id="edit-competitionNumber" required>
-          </div>
-          <div class="mb-3">
-            <label for="edit-club" class="form-label">Klub</label><br>
-            <select name="comp-number" id="edit-club-id">
-              <option value="1">Aalborg Skøjteløberforening</option>
-              <option value="2">Aarhus Skøjteklub</option>
-              <option value="3">Esbjerg Skøjteklub</option>
-              <option value="4">Frederikshavn Skøjteforening</option>
-              <option value="5">Gentofte Kunstskøjteløber Forening</option>
-              <option value="6">Gladsaxe Skøjteløber-Forening</option>
-              <option value="7">Herlev Idrætsforenings Kunstskøjte Afdeling</option>
-              <option value="8">Herning Skøjteløber Forening</option>
-              <option value="9">Hvidovre Skøjte Klub</option>
-              <option value="10">Hørsholm Kunstskøjteløber Forening</option>
-              <option value="11">Odense Skøjteklub</option>
-              <option value="12">Rødovre Skøjte- og Ishockey Klub</option>
-              <option value="13">Silkeborg Skøjteløberforening</option>
-              <option value="14">Skøjteklub København</option>
-              <option value="15">Skøjte og Sport Forening Nord</option>
-              <option value="16">Tårnby Skøjteklub</option>
-              <option value="17">Vojens Skøjteklub</option>
-              <option value="18">Ørestad Skøjteklub</option>
-            </select>
-          </div>
-        </form>
-        <p id="edit-status">&nbsp;</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Luk</button>
-        <button id="edit-save-btn" type="button" class="btn btn-primary">Gem ændringer</button>
+  <div
+    class="modal fade"
+    id="edit-modal"
+    tabindex="-1"
+    aria-labelledby="edit-modal-label"
+    aria-hidden="true"
+    style="z-index: 1050"
+  >
+    <div class="modal-dialog" style="max-width: 800px; width: 80%">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="edit-modal-label">Edit Athlete</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="edit-form">
+            <div class="mb-3">
+              <label for="edit-lastName" class="form-label">Efternavn</label>
+              <input
+                type="text"
+                class="form-control"
+                id="edit-lastName"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="edit-firstName" class="form-label">Fornavn</label>
+              <input
+                type="text"
+                class="form-control"
+                id="edit-firstName"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="edit-birthdate" class="form-label">Fødselsdag</label>
+              <input
+                type="date"
+                class="form-control"
+                id="edit-birthdate"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="edit-clubMark" class="form-label">Klubmærke</label>
+              <input
+                type="text"
+                class="form-control"
+                id="edit-clubMark"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="edit-competitionNumber" class="form-label"
+                >Løbernummer</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="edit-competitionNumber"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="edit-club" class="form-label">Klub</label><br />
+              <select name="comp-number" id="edit-club-id">
+                <option value="1">Aalborg Skøjteløberforening</option>
+                <option value="2">Aarhus Skøjteklub</option>
+                <option value="3">Esbjerg Skøjteklub</option>
+                <option value="4">Frederikshavn Skøjteforening</option>
+                <option value="5">Gentofte Kunstskøjteløber Forening</option>
+                <option value="6">Gladsaxe Skøjteløber-Forening</option>
+                <option value="7">
+                  Herlev Idrætsforenings Kunstskøjte Afdeling
+                </option>
+                <option value="8">Herning Skøjteløber Forening</option>
+                <option value="9">Hvidovre Skøjte Klub</option>
+                <option value="10">Hørsholm Kunstskøjteløber Forening</option>
+                <option value="11">Odense Skøjteklub</option>
+                <option value="12">Rødovre Skøjte- og Ishockey Klub</option>
+                <option value="13">Silkeborg Skøjteløberforening</option>
+                <option value="14">Skøjteklub København</option>
+                <option value="15">Skøjte og Sport Forening Nord</option>
+                <option value="16">Tårnby Skøjteklub</option>
+                <option value="17">Vojens Skøjteklub</option>
+                <option value="18">Ørestad Skøjteklub</option>
+              </select>
+            </div>
+          </form>
+          <p id="edit-status">&nbsp;</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Luk
+          </button>
+          <button id="edit-save-btn" type="button" class="btn btn-primary">
+            Gem ændringer
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>

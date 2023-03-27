@@ -1,12 +1,25 @@
 import { API_URL } from "../../settings.js"
+import { checkAndRedirectIfNotLoggedIn } from "../../auth.js";
 import { hideLoading, showLoading } from "../../utils.js";
 const URL = API_URL + "/clubs"
 
 export async function initClubs() {
+  if (checkAndRedirectIfNotLoggedIn()) {
+    return;
+  }
     clearBoxes();
     showLoading();
     try {
-      const clubs = await fetch(URL).then((res) => res.json());
+      const username = localStorage.getItem("username");
+      const token = localStorage.getItem("token");
+      const options = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+      const clubs = await fetch(URL,options).then((res) => res.json());
       showBoxes(clubs);
     } catch (err) {
       hideLoading();
@@ -15,6 +28,8 @@ export async function initClubs() {
       hideLoading();
     }
   }
+
+
   
   function showBoxes(clubs) {
     const boxes = clubs.map((club) => `

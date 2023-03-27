@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="template">
+        <button id="create-competition-button">Opret konkurrence</button>
+        <!-- The modal -->
+        <div id="create-competition-modal" class="modal">
+          <div class="modal-content">
+            <span class="close" id="close-modal-button">&times;</span>
+            <h2>Create Competition</h2>
+            <form id="create-competition-form">
+              <div>
+                <label for="start-date">Start dato:</label>
+                <input type="date" id="start-date" required>
+              </div>
+              <div>
+                <label for="end-date">Slut dato:</label>
+                <input type="date" id="end-date" required>
+              </div>
+              <div>
+                <label for="deadline">Tilmeldingsfrist:</label>
+                <input type="date" id="deadline" required>
+              </div>
+              <div>
+                <label for="location">Lokation:</label>
+                <select id="location" required>
+                  <option></option>
+                </select>
+              <div>
+                <label for="competition-type">Konkurrence type:</label>
+                <select id="competition-type" required>
+                </select>
+              </div>
+          
+              </div>
+              <button type="submit">Opret</button>
+            </form>
+          </div>
+        </div>
+
+        <h1>Konkurrencer</h1>
+        <input type="text" id="search-input" placeholder="Søg...">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Start dato</th>
+              <th>Slut dato</th>
+              <th>Tilmeldingsfrist</th>
+              <th>Konkurrence type</th>
+              <th>Lokation</th>
+            </tr>
+          </thead>
+          <div id="loading"></div>
+          <tbody id="table-rows"></tbody>
+        </table>
+        <p id="error" style="color:red"></p>
+    
+    </div>
+    
+
+    
+</body>
+</html>

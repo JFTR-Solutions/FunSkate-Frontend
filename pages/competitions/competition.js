@@ -1,4 +1,5 @@
 import { API_URL } from "../../settings.js";
+import { checkAndRedirectIfNotLoggedIn } from "../../auth.js";
 import {
   hideLoading,
   sanitizeStringWithTableRows,
@@ -8,7 +9,10 @@ import {
 const URL = API_URL + "/competitions";
 let locationId = null;
 
-export async function initCompetitions() {
+export function initCompetitions() {
+  if (checkAndRedirectIfNotLoggedIn()) {
+    return;
+  }
   document
     .getElementById("create-competition-button")
     .addEventListener("click", createCompetition);
@@ -20,7 +24,17 @@ export async function initCompetitions() {
 async function showTable() {
   showLoading();
   try {
-    const competitions = await fetch(URL).then((res) => res.json());
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const competitions = await fetch(URL, options).then((res) => res.json());
     createTable(competitions);
     addSearchListener(competitions);
   } catch (err) {
@@ -32,8 +46,21 @@ async function showTable() {
 }
 
 function fetchLocations() {
-  const URL = API_URL + "/locations";
-  return fetch(URL).then((res) => res.json());
+  try {
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = API_URL + "/locations";
+    return fetch(URL, options).then((res) => res.json());
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 function checkDates() {
@@ -145,10 +172,12 @@ async function createCompetition() {
     };
 
     // Submit the competition request to the server
+    const token = localStorage.getItem("token");
     const response = await fetch(API_URL + "/competitions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(competition),
     });

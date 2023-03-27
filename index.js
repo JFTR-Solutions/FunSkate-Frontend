@@ -10,8 +10,15 @@ import { initClubs } from "./pages/clubs/clubs.js";
 import { initAthletes } from "./pages/athletes/athletes.js";
 import { initAddAthlete } from "./pages/addAthlete/addAthlete.js";
 import { initCompetitions } from "./pages/competitions/competition.js";
+import {initLogin, logout} from "./pages/login/login.js";
+import { checkIfLoggedIn, updateRestrictedLinks } from "./auth.js";
 import { initAddParticipant } from "./pages/addParticipant/addParticipant.js";
 
+const login = localStorage.getItem("token")
+if ((login)) {
+  document.getElementById("login-id").style.display = "none";
+  document.getElementById("logout-id").style.display = "block";
+}
 
 window.addEventListener("load", async () => {
   const templateClubs = await loadHtml("./pages/clubs/clubs.html");
@@ -19,6 +26,7 @@ window.addEventListener("load", async () => {
   const templateNotFound = await loadHtml("./pages/notFound/notFound.html");
   const templateAddAthlete = await loadHtml("./pages/addAthlete/addAthlete.html");
   const templateCompetition = await loadHtml("./pages/competitions/competition.html");
+  const templateLogin = await loadHtml("./pages/login/login.html")
   const templateAddParticipant = await loadHtml("./pages/addParticipant/addParticipant.html")
 
   adjustForMissingHash();
@@ -35,11 +43,15 @@ window.addEventListener("load", async () => {
       },
     })
     .on({
-      //For very simple "templates", you can just insert your HTML directly like below
-      "/": () =>
-        (document.getElementById("content").innerHTML = `
-        <img style="width:50%;max-width:600px;margin-top:1em;" src="./images/funskate.png">
-     `),
+      "/": () => {
+        if (checkIfLoggedIn() === "anonymous") {
+          window.router.navigate("/login");
+          return;
+        }
+        document.getElementById("content").innerHTML = `
+          <img style="width:50%;max-width:600px;margin-top:1em;" src="./images/funskate.png">
+        `;
+      },
       "/clubs": () => {
         renderTemplate(templateClubs, "content");
         initClubs();
@@ -56,15 +68,36 @@ window.addEventListener("load", async () => {
         renderTemplate(templateCompetition, "content")
         initCompetitions();
       },
+      "/login": ()=> {
+        renderTemplate(templateLogin, "content")
+        initLogin();
+      },
+      "/logout": () => {
+        logout();
+      },
+      
       "/add-participant/:competitionId": (match) => {
         renderTemplate(templateAddParticipant, "content")
         initAddParticipant(match);
       },
     })
+    
     .notFound(() => {
       renderTemplate(templateNotFound, "content");
     })
     .resolve();
+  router.hooks({
+    after: (params) => {
+      updateRestrictedLinks();
+    },
+  });
+  
+  const token = localStorage.getItem("token");
+  const roles = localStorage.getItem("roles");
+  
+  if (token && roles) {
+    updateRestrictedLinks();
+  }
 });
 
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {

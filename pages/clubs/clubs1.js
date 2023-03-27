@@ -1,8 +1,12 @@
 import { API_URL } from "../../settings.js"
+import { checkAndRedirectIfNotLoggedIn } from "../../auth.js";
 import { hideLoading, sanitizeStringWithTableRows, showLoading } from "../../utils.js";
 const URL = API_URL + "/clubs"
 
 export async function initClubs() {
+  if (checkAndRedirectIfNotLoggedIn) {
+    return;
+  }
     clearTable();
     showLoading();
     try {

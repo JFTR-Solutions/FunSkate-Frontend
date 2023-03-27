@@ -61,7 +61,8 @@ export async function initAthletes() {
       const filteredAthletes = athletes.filter(athlete =>
         Object.values(athlete).some(value =>
           value.toString().toLowerCase().includes(searchTerm)
-        ) || athlete.club.name.toLowerCase().includes(searchTerm)
+        ) || athlete.clubResponse.abbreviation.toLowerCase().includes(searchTerm)
+          || athlete.clubResponse.name.toLowerCase().includes(searchTerm)
       );
       showTable(filteredAthletes);
     });

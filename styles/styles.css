@@ -67,6 +67,12 @@
     height: auto; /* set the height to auto to expand the box */
   }
   
+  .admin-link,
+.user-link,
+.logged-out-link,
+.anonymous-link {
+  display: none;
+}
 
   /* Modal styles */
 .modal {

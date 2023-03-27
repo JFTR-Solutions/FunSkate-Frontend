@@ -12,6 +12,7 @@ import { initAddAthlete } from "./pages/addAthlete/addAthlete.js";
 import { initCompetitions } from "./pages/competitions/competition.js";
 import {initLogin, logout} from "./pages/login/login.js";
 import { checkIfLoggedIn, updateRestrictedLinks } from "./auth.js";
+import { initAddParticipant } from "./pages/addParticipant/addParticipant.js";
 
 const login = localStorage.getItem("token")
 if ((login)) {
@@ -26,6 +27,7 @@ window.addEventListener("load", async () => {
   const templateAddAthlete = await loadHtml("./pages/addAthlete/addAthlete.html");
   const templateCompetition = await loadHtml("./pages/competitions/competition.html");
   const templateLogin = await loadHtml("./pages/login/login.html")
+  const templateAddParticipant = await loadHtml("./pages/addParticipant/addParticipant.html")
 
   adjustForMissingHash();
 
@@ -74,6 +76,10 @@ window.addEventListener("load", async () => {
         logout();
       },
       
+      "/add-participant/:competitionId": (match) => {
+        renderTemplate(templateAddParticipant, "content")
+        initAddParticipant(match);
+      },
     })
     
     .notFound(() => {

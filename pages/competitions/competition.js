@@ -5,6 +5,7 @@ import {
   sanitizeStringWithTableRows,
   showLoading,
 } from "../../utils.js";
+
 const URL = API_URL + "/competitions";
 let locationId = null;
 
@@ -17,6 +18,7 @@ export function initCompetitions() {
     .addEventListener("click", createCompetition);
   clearTable();
   showTable();
+  doubleClickRow();
 }
 
 async function showTable() {
@@ -183,6 +185,7 @@ async function createCompetition() {
     if (response.ok) {
       clearTable();
       showTable();
+      clearCreateForm();
 
       // The competition was created successfully
       modal.style.display = "none";
@@ -192,6 +195,15 @@ async function createCompetition() {
       // TODO: Show an error message to the user
     }
   });
+}
+
+function clearCreateForm() {
+  const dateInputs = document.querySelectorAll(".dates");
+  dateInputs.forEach((input) => {
+    input.value = "";
+  });
+
+  document.getElementById("competition-type").innerHTML = `<option></option>`;
 }
 
 async function getLocationById(id) {
@@ -205,7 +217,7 @@ function createTable(competitions) {
   const competitionTypeTranslations = {
     WEST: "Vest",
     EAST: "Øst",
-    FINALS: "Finaler",
+    FINALS: "Finale",
   };
   const tableRows = competitions
     .map(
@@ -239,5 +251,20 @@ function addSearchListener(competitions) {
         ) || competition.location.name.toLowerCase().includes(searchTerm)
     );
     showTable(filteredCompetitions);
+  });
+}
+
+function doubleClickRow() {
+  const table = document.querySelector(".table");
+  table.addEventListener("dblclick", function (event) {
+    const target = event.target.parentNode;
+    if (
+      target.tagName.toLowerCase() === "tr" &&
+      target.parentNode.tagName.toLowerCase() === "tbody"
+    ) {
+      // Handle double click on table row here
+      const id = target.querySelector("td:first-child").textContent;
+      router.navigate(`/add-participant/${id}`);
+    }
   });
 }

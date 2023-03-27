@@ -68,4 +68,11 @@ export function isLoggedIn() {
         link.style.display = role === "anonymous" ? "block" : "none";
       }
     });
+    
+    const loggedOutLinks = document.querySelectorAll(".logged-out-link");
+  loggedOutLinks.forEach((link) => {
+    if (link instanceof HTMLElement) {
+      link.style.display = role === "" ? "block" : "none";
+    }
+  });
   }

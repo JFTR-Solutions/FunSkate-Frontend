@@ -61,4 +61,5 @@ export function logout() {
   document.getElementById("login-id").style.display = "block";
   document.getElementById("logout-id").style.display = "none";
   window.router.navigate("");
+  
 }

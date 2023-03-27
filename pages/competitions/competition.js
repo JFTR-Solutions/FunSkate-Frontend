@@ -1,24 +1,40 @@
 import { API_URL } from "../../settings.js";
+import { checkAndRedirectIfNotLoggedIn } from "../../auth.js";
 import {
   hideLoading,
   sanitizeStringWithTableRows,
   showLoading,
 } from "../../utils.js";
+
 const URL = API_URL + "/competitions";
 let locationId = null;
 
-export async function initCompetitions() {
+export function initCompetitions() {
+  if (checkAndRedirectIfNotLoggedIn()) {
+    return;
+  }
   document
     .getElementById("create-competition-button")
     .addEventListener("click", createCompetition);
   clearTable();
   showTable();
+  doubleClickRow();
 }
 
 async function showTable() {
   showLoading();
   try {
-    const competitions = await fetch(URL).then((res) => res.json());
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const competitions = await fetch(URL, options).then((res) => res.json());
     createTable(competitions);
     addSearchListener(competitions);
   } catch (err) {
@@ -30,8 +46,21 @@ async function showTable() {
 }
 
 function fetchLocations() {
-  const URL = API_URL + "/locations";
-  return fetch(URL).then((res) => res.json());
+  try {
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = API_URL + "/locations";
+    return fetch(URL, options).then((res) => res.json());
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 function checkDates() {
@@ -143,10 +172,12 @@ async function createCompetition() {
     };
 
     // Submit the competition request to the server
+    const token = localStorage.getItem("token");
     const response = await fetch(API_URL + "/competitions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(competition),
     });
@@ -154,6 +185,7 @@ async function createCompetition() {
     if (response.ok) {
       clearTable();
       showTable();
+      clearCreateForm();
 
       // The competition was created successfully
       modal.style.display = "none";
@@ -163,6 +195,15 @@ async function createCompetition() {
       // TODO: Show an error message to the user
     }
   });
+}
+
+function clearCreateForm() {
+  const dateInputs = document.querySelectorAll(".dates");
+  dateInputs.forEach((input) => {
+    input.value = "";
+  });
+
+  document.getElementById("competition-type").innerHTML = `<option></option>`;
 }
 
 async function getLocationById(id) {
@@ -176,7 +217,7 @@ function createTable(competitions) {
   const competitionTypeTranslations = {
     WEST: "Vest",
     EAST: "Øst",
-    FINALS: "Finaler",
+    FINALS: "Finale",
   };
   const tableRows = competitions
     .map(
@@ -210,5 +251,20 @@ function addSearchListener(competitions) {
         ) || competition.location.name.toLowerCase().includes(searchTerm)
     );
     showTable(filteredCompetitions);
+  });
+}
+
+function doubleClickRow() {
+  const table = document.querySelector(".table");
+  table.addEventListener("dblclick", function (event) {
+    const target = event.target.parentNode;
+    if (
+      target.tagName.toLowerCase() === "tr" &&
+      target.parentNode.tagName.toLowerCase() === "tbody"
+    ) {
+      // Handle double click on table row here
+      const id = target.querySelector("td:first-child").textContent;
+      router.navigate(`/add-participant/${id}`);
+    }
   });
 }

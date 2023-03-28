@@ -41,8 +41,8 @@ export async function initAthletes() {
           <td>${athlete.birthdate}</td>
           <td>${athlete.clubMark}</td>
           <td>${athlete.competitionNumber}</td>
-          <td>${athlete.club.name}</td>
-          <td><img src="/images/clubLogos/${athlete.club.id}.png" width=60"></td>
+          <td>${athlete.clubResponse.abbreviation}</td>
+          <td><img src="/images/clubLogos/${athlete.clubResponse.id}.png" width=60"></td>
         </tr>`
       )
       .join("");

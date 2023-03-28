@@ -1,50 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-
     <div class="template">
-        <button id="create-competition-button">Opret konkurrence</button>
-        <!-- The modal -->
-        <div id="create-competition-modal" class="modal">
-          <div class="modal-content">
-            <span class="close" id="close-modal-button">&times;</span>
-            <h2>Create Competition</h2>
-            <form id="create-competition-form">
-              <div>
-                <label for="start-date">Start dato:</label>
-                <input type="date" id="start-date" class="dates" required>
-              </div>
-              <div>
-                <label for="end-date">Slut dato:</label>
-                <input type="date" id="end-date" class="dates"  required>
-              </div>
-              <div>
-                <label for="deadline">Tilmeldingsfrist:</label>
-                <input type="date" id="deadline" class="dates"  required>
-              </div>
-              <div>
-                <label for="location">Lokation:</label>
-                <select id="location" required>
-                  <option></option>
-                </select>
-              <div>
-                <label for="competition-type">Konkurrence type:</label>
-                <select id="competition-type" required>
-                </select>
-              </div>
-          
-              </div>
-              <button type="submit">Opret</button>
-            </form>
-          </div>
-        </div>
-
+        <button id="create-competition-button" class="btn btn-primary" style="margin-left: 45%;">Opret konkurrence</button>
         <h1>Konkurrencer</h1>
         <input type="text" id="search-input" placeholder="Søg...">
         <table class="table">
@@ -62,9 +17,52 @@
           <tbody id="table-rows"></tbody>
         </table>
         <p id="error" style="color:red"></p>
-    </div>
     
-
-    
-</body>
-</html>
+        <!-- The modal -->
+        <div id="create-competition-modal" class="modal">
+          <div class="modal-dialog" style="max-width: 800px; width: 80%;">
+          <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="edit-modal-label">Opret Konkurrence</h1>
+          
+          </div>
+          <div class="modal-body">
+            <form id="create-competition-form">
+              <div class="mb-3">
+                <label for="start-date">Start dato:</label>
+                <input type="date" id="start-date" required>
+              </div>
+              <div class="mb-3">
+                <label for="end-date">Slut dato:</label>
+                <input type="date" id="end-date" required>
+              </div>
+              <div class="mb-3">
+                <label for="deadline">Tilmeldingsfrist:</label>
+                <input type="date" id="deadline" required>
+              </div>
+              <div class="mb-3">
+                <label for="location">Lokation:</label>
+                <select id="location" required>
+                  <option></option>
+                </select>
+              <div class="mb-3"><br>
+                <label for="competition-type">Konkurrence type:</label>
+                <select id="competition-type" required>
+                </select>
+              </div>
+            </form>
+          </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                id="close-modal-button"
+              >
+                Luk
+              </button>
+              <button type="submit" class="btn btn-primary">Opret</button>
+            </div>
+            </div>
+          </div>
+        </div>

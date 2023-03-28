@@ -1,9 +1,7 @@
 import { checkIfLoggedIn } from "../../auth.js";
 import { API_URL } from "../../settings.js";
 import {
-  hideLoading,
   sanitizeStringWithTableRows,
-  showLoading,
 } from "../../utils.js";
 import { updateRestrictedLinks } from "../../auth.js";
 import { handleHttpErrors, encode } from "../../utils.js";
@@ -22,6 +20,7 @@ export function initLogin() {
 }
 
 async function login(evt) {
+
   document.getElementById("error").innerText = "";
 
   const username = document.getElementById("username").value;
@@ -45,19 +44,21 @@ async function login(evt) {
     document.getElementById("login-id").style.display = "none";
     document.getElementById("logout-id").style.display = "block";
     window.router.navigate("");
-    updateRestrictedLinks(true); // <-- Pass true to updateRestrictedLinks
+    updateRestrictedLinks(); // <-- Pass true to updateRestrictedLinks
     const loginBtn = document.getElementById("loginBtn");
     loginBtn.textContent = "Logout";
     loginBtn.onclick = logout;
     localStorage.setItem("error", "");
   } catch (err) {
     console.log(err.message);
+    localStorage.setItem("error", err.message);
+    document.getElementById("error").innerText = localStorage.getItem("error");
   }
 }
 
 export function logout() {
   localStorage.clear();
-  updateRestrictedLinks(false); // <-- Pass false to updateRestrictedLinks
+  updateRestrictedLinks(); // <-- Pass false to updateRestrictedLinks
   document.getElementById("login-id").style.display = "block";
   document.getElementById("logout-id").style.display = "none";
   window.router.navigate("");

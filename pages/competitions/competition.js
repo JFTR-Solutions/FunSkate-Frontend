@@ -173,6 +173,7 @@ async function createCompetition() {
 
     // Submit the competition request to the server
     const token = localStorage.getItem("token");
+    
     const response = await fetch(API_URL + "/competitions", {
       method: "POST",
       headers: {
@@ -207,7 +208,15 @@ function clearCreateForm() {
 }
 
 async function getLocationById(id) {
-  const location = await fetch(API_URL + "/locations/" + id).then((res) =>
+  const token = localStorage.getItem("token");
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const location = await fetch(API_URL + "/locations/" + id,options).then((res) =>
     res.json()
   );
   return location;

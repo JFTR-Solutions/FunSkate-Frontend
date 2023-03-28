@@ -113,4 +113,18 @@ export function renderTemplate(template, contentId) {
     const [year, month, day] = dateString.split("-");
     return `${day}-${month}-${year}`;
   }
+
+  export function convertToDanishRegionNames(compType) {
+    switch (compType) {
+      case "WEST":
+        return "Vest";
+      case "EAST":
+        return "Øst";
+      case "FINALS":
+        return "Finale";
+      default:
+        return compType;
+    }
+  }
+  
   

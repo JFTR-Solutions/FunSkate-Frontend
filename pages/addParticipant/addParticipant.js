@@ -4,6 +4,7 @@ import {
   sanitizeStringWithTableRows,
   showLoading,
   convertToEuropeanDate,
+  convertToDanishRegionNames
 } from "../../utils.js";
 
 let compId = "";
@@ -25,15 +26,18 @@ export async function initAddParticipant(match) {
 async function setupCompDetails() {
   const compDetails = await fetchCompDetails();
   const euDate = convertToEuropeanDate(compDetails.startDate);
+  console.log(compDetails)
   document.getElementById("comp-details").innerHTML = `
 <h1>${compDetails.location.name}</h1>
 <div>Start dato: ${convertToEuropeanDate(
     compDetails.startDate
   )}<br>Slut dato: ${convertToEuropeanDate(
     compDetails.endDate
-  )}<br>Tilmeldingsfrist: ${convertToEuropeanDate(compDetails.deadline)}</div>
+  )}<br>Tilmeldingsfrist: ${convertToEuropeanDate(compDetails.deadline)}
+  <br>Konkurrence type: ${convertToDanishRegionNames(compDetails.competitionType)}</div>
 `;
 }
+
 
 async function fetchCompDetails() {
   try {
@@ -56,7 +60,6 @@ async function fetchCompDetails() {
 }
 
 async function fetchAthletes(participatingAthletes = []) {
-  //showLoading();
   try {
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
@@ -70,23 +73,36 @@ async function fetchAthletes(participatingAthletes = []) {
     const athletes = await fetch(athletesURL, options).then((res) =>
       res.json()
     );
-    const filteredAthletes = filterAthletes(athletes, participatingAthletes);
+
+    const compDetails = await fetchCompDetails();
+
+    const filteredAthletes = filterAthletes(
+      athletes,
+      participatingAthletes,
+      compDetails.competitionType
+    );
+
     showTable(filteredAthletes);
     doubleClickRow(filteredAthletes);
-    //addSearchListener(athletes);
   } catch (err) {
-    //hideLoading();
     console.log(err.message);
-  } finally {
-    //hideLoading();
   }
 }
 
-function filterAthletes(athletes, participatingAthleteIds) {
-  return athletes.filter(
+function filterAthletes(athletes, participatingAthleteIds, competitionType) {
+  const filteredAthletes = athletes.filter(
     (athlete) => !participatingAthleteIds.includes(athlete.id)
   );
+
+  if (competitionType === "WEST" || competitionType === "EAST") {
+    return filteredAthletes.filter(
+      (athlete) => athlete.clubResponse.eastWest === competitionType
+    );
+  }
+
+  return filteredAthletes;
 }
+
 
 async function fetchParticipatingAthletes() {
   //showLoading();

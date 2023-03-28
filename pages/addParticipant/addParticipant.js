@@ -4,6 +4,7 @@ import {
   sanitizeStringWithTableRows,
   showLoading,
   convertToEuropeanDate,
+  convertToDanishRegionNames
 } from "../../utils.js";
 
 let compId = "";
@@ -25,16 +26,18 @@ export async function initAddParticipant(match) {
 async function setupCompDetails() {
   const compDetails = await fetchCompDetails();
   const euDate = convertToEuropeanDate(compDetails.startDate);
+  console.log(compDetails)
   document.getElementById("comp-details").innerHTML = `
 <h1>${compDetails.location.name}</h1>
 <div>Start dato: ${convertToEuropeanDate(
     compDetails.startDate
   )}<br>Slut dato: ${convertToEuropeanDate(
     compDetails.endDate
-  )}<br>Tilmeldingsfrist: ${convertToEuropeanDate(compDetails.deadline)}</div>
+  )}<br>Tilmeldingsfrist: ${convertToEuropeanDate(compDetails.deadline)}
+  <br>Konkurrence type: ${convertToDanishRegionNames(compDetails.competitionType)}</div>
 `;
 }
-
+/*
 async function fetchCompDetails() {
   try {
     const username = localStorage.getItem("username");
@@ -71,6 +74,7 @@ async function fetchAthletes(participatingAthletes = []) {
       res.json()
     );
     const filteredAthletes = filterAthletes(athletes, participatingAthletes);
+    console.log(filteredAthletes)
     showTable(filteredAthletes);
     doubleClickRow(filteredAthletes);
     //addSearchListener(athletes);
@@ -86,7 +90,72 @@ function filterAthletes(athletes, participatingAthleteIds) {
   return athletes.filter(
     (athlete) => !participatingAthleteIds.includes(athlete.id)
   );
+}*/
+
+async function fetchCompDetails() {
+  try {
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const compURL = URL + compId;
+    const res = await fetch(compURL, options).then((res) => res.json());
+    return res;
+  } catch (err) {
+    console.log(err.message);
+  } finally {
+  }
 }
+
+async function fetchAthletes(participatingAthletes = []) {
+  try {
+    const username = localStorage.getItem("username");
+    const token = localStorage.getItem("token");
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const athletes = await fetch(athletesURL, options).then((res) =>
+      res.json()
+    );
+
+    const compDetails = await fetchCompDetails();
+
+    const filteredAthletes = filterAthletes(
+      athletes,
+      participatingAthletes,
+      compDetails.competitionType
+    );
+
+    showTable(filteredAthletes);
+    doubleClickRow(filteredAthletes);
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+function filterAthletes(athletes, participatingAthleteIds, competitionType) {
+  const filteredAthletes = athletes.filter(
+    (athlete) => !participatingAthleteIds.includes(athlete.id)
+  );
+
+  if (competitionType === "WEST" || competitionType === "EAST") {
+    return filteredAthletes.filter(
+      (athlete) => athlete.clubResponse.eastWest === competitionType
+    );
+  }
+
+  return filteredAthletes;
+}
+
 
 async function fetchParticipatingAthletes() {
   //showLoading();

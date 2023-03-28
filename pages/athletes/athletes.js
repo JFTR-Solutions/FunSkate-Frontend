@@ -86,6 +86,7 @@ export async function initAthletes() {
     document.getElementById("edit-competitionNumber").value = athlete.competitionNumber;
     document.getElementById("edit-club-id").value = athlete.clubResponse.id;
     document.getElementById("edit-save-btn").onclick = () => saveEditAthlete(athlete);
+    document.getElementById("delete-btn").onclick = () => deleteAthlete(athlete);
 
 
     const modal = new bootstrap.Modal(document.getElementById("edit-modal"), {
@@ -105,6 +106,7 @@ export async function initAthletes() {
       competitionNumber: document.getElementById("edit-competitionNumber").value,
       club: await fetchClub(document.getElementById("edit-club-id").value)
   };
+  
 
   try {
     const response = await fetch(URL + `/${athlete.id}`, {
@@ -150,6 +152,34 @@ async function fetchClub(id){
   } catch (error) {
     console.error(error);
     throw error;
+  }
+
+}
+
+async function deleteAthlete(athlete) {
+  try {
+    const confirmDelete = confirm("Are you sure you want to delete this athlete?");
+    if (!confirmDelete) {
+      return;
+    }
+    const response = await fetch(URL + `/${athlete.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error deleting athlete");
+    }
+    const modal = bootstrap.Modal.getInstance(document.getElementById("edit-modal"));
+    modal.hide();
+    initAthletes();
+    document.getElementById("edit-status").innerHTML = "";
+
+  } catch (error) {
+    document.getElementById("edit-status").innerHTML = `<span style="color:red;">${error.message}</span>`;
   }
 }
 

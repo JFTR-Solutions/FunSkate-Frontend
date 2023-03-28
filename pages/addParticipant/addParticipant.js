@@ -12,6 +12,7 @@ const URL = API_URL + "/competitions/";
 const athletesURL = API_URL + "/athletes";
 const eventParticipantURL = API_URL + "/event-participant/";
 let participatingAthleteIds;
+const token = localStorage.getItem("token");
 
 export async function initAddParticipant(match) {
   clearTables();
@@ -37,14 +38,27 @@ async function setupCompDetails() {
 
 async function fetchCompDetails() {
   const compURL = URL + compId;
-  const res = await fetch(compURL);
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  } 
+  const res = await fetch(compURL, options);
   return await res.json();
 }
 
 async function fetchAthletes(participatingAthletes = []) {
   //showLoading();
   try {
-    const athletes = await fetch(athletesURL).then((res) => res.json());
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    } 
+    const athletes = await fetch(athletesURL,options).then((res) => res.json());
     const filteredAthletes = filterAthletes(athletes, participatingAthletes);
     showTable(filteredAthletes);
     doubleClickRow(filteredAthletes);
@@ -65,7 +79,13 @@ function filterAthletes(athletes, participatingAthleteIds) {
 async function fetchParticipatingAthletes() {
   //showLoading();
   try {
-    const participatingAthletes = await fetch(eventParticipantURL + compId).then((res) => res.json());
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    } 
+    const participatingAthletes = await fetch(eventParticipantURL + compId,options).then((res) => res.json());
     participatingAthleteIds = participatingAthletes.map(partAthlete => partAthlete.athlete.id);
     showParticipantTable(participatingAthletes);
     //addSearchListener(participatinAthletes);

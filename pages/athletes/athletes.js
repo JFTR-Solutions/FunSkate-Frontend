@@ -158,7 +158,7 @@ async function fetchClub(id){
 
 async function deleteAthlete(athlete) {
   try {
-    const confirmDelete = confirm("Are you sure you want to delete this athlete?");
+    const confirmDelete = confirm("Er du sikker på at du vil slette den løber?");
     if (!confirmDelete) {
       return;
     }

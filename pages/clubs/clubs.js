@@ -52,7 +52,7 @@ export async function initClubs() {
     // attach onclick event to each club-box element
     const clubBoxes = document.getElementsByClassName("club-box");
     for (let i = 0; i < clubBoxes.length; i++) {
-      clubBoxes[i].addEventListener("click", function() {
+      clubBoxes[i].addEventListener("dblclick", function() {
         showInfo(this);
       });
     }

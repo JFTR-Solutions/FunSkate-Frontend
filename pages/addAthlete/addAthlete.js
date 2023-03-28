@@ -5,6 +5,7 @@ const ATHLETE_URL = API_URL + "/athletes"
 const CLUB_URL = API_URL + "/clubs"
 
 let clubById = null;
+const token = localStorage.getItem("token");
 
 
 export async function initAddAthlete() {
@@ -22,7 +23,6 @@ export async function initAddAthlete() {
 
 
 function fetchClub(){
-    const token = localStorage.getItem("token");
     const id = document.getElementById("club-id").value
     const options = {
         headers: {
@@ -57,6 +57,7 @@ function addAthlete(){
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(athlete),
         })

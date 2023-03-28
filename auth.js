@@ -40,7 +40,7 @@ export function isLoggedIn() {
   }
 
   export function redirectToLogin() {
-    window.router.navigate("/login");
+    window.location.href = "/";
     localStorage.setItem("error", "Du skal være logget på for at få vist siden");
   }
 

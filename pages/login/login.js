@@ -19,6 +19,7 @@ export function initLogin() {
   }
 }
 
+
 async function login(evt) {
 
   document.getElementById("error").innerText = "";
@@ -33,6 +34,7 @@ async function login(evt) {
   };
 
   try {
+
     // Make a POST request to the login endpoint
     const response = await fetch(API_URL + "/auth/login", options).then((res) =>
       handleHttpErrors(res)
@@ -44,16 +46,18 @@ async function login(evt) {
     document.getElementById("login-id").style.display = "none";
     document.getElementById("logout-id").style.display = "block";
     window.router.navigate("");
+    location.reload();
     updateRestrictedLinks(); // <-- Pass true to updateRestrictedLinks
     const loginBtn = document.getElementById("loginBtn");
     loginBtn.textContent = "Logout";
     loginBtn.onclick = logout;
-    localStorage.setItem("error", "");
+    localStorage.removeItem("error")
   } catch (err) {
     console.log(err.message);
     localStorage.setItem("error", err.message);
     document.getElementById("error").innerText = localStorage.getItem("error");
   }
+  location.reload();
 }
 
 export function logout() {
@@ -61,6 +65,5 @@ export function logout() {
   updateRestrictedLinks(); // <-- Pass false to updateRestrictedLinks
   document.getElementById("login-id").style.display = "block";
   document.getElementById("logout-id").style.display = "none";
-  window.router.navigate("");
-  
+  window.location.href = "/";
 }

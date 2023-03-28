@@ -130,6 +130,7 @@ export async function initAthletes() {
 }
 
 
+
 async function fetchClub(id){
   try {
     const options = {
@@ -152,5 +153,3 @@ async function fetchClub(id){
     throw error;
   }
 }
-
- 

@@ -37,60 +37,7 @@ async function setupCompDetails() {
   <br>Konkurrence type: ${convertToDanishRegionNames(compDetails.competitionType)}</div>
 `;
 }
-/*
-async function fetchCompDetails() {
-  try {
-    const username = localStorage.getItem("username");
-    const token = localStorage.getItem("token");
-    const options = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const compURL = URL + compId;
-    const res = await fetch(compURL, options).then((res) => res.json());
-    return res;
-  } catch (err) {
-    console.log(err.message);
-  } finally {
-  }
-}
 
-async function fetchAthletes(participatingAthletes = []) {
-  //showLoading();
-  try {
-    const username = localStorage.getItem("username");
-    const token = localStorage.getItem("token");
-    const options = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const athletes = await fetch(athletesURL, options).then((res) =>
-      res.json()
-    );
-    const filteredAthletes = filterAthletes(athletes, participatingAthletes);
-    console.log(filteredAthletes)
-    showTable(filteredAthletes);
-    doubleClickRow(filteredAthletes);
-    //addSearchListener(athletes);
-  } catch (err) {
-    //hideLoading();
-    console.log(err.message);
-  } finally {
-    //hideLoading();
-  }
-}
-
-function filterAthletes(athletes, participatingAthleteIds) {
-  return athletes.filter(
-    (athlete) => !participatingAthleteIds.includes(athlete.id)
-  );
-}*/
 
 async function fetchCompDetails() {
   try {

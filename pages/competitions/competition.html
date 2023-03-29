@@ -1,16 +1,15 @@
     <div class="template">
-        <button id="create-competition-button" class="btn btn-primary" style="margin-left: 45%;">Opret konkurrence</button>
+        <button id="create-competition-button" data-bs-target="modal" class="btn btn-primary" style="margin-left: 45%;">Opret konkurrence</button>
         <h1>Konkurrencer</h1>
-        <input type="text" id="search-input" placeholder="Søg...">
         <table class="table">
           <thead>
             <tr>
-              <th>ID</th>
+              <!--<th>ID</th>-->
+              <th>Konkurrence type</th>
+              <th>Lokation</th>
               <th>Start dato</th>
               <th>Slut dato</th>
               <th>Tilmeldingsfrist</th>
-              <th>Konkurrence type</th>
-              <th>Lokation</th>
             </tr>
           </thead>
           <div id="loading"></div>
@@ -19,12 +18,11 @@
         <p id="error" style="color:red"></p>
     
         <!-- The modal -->
-        <div id="create-competition-modal" class="modal">
+        <div class="modal fade" id="competition-modal" tabindex="-1" aria-labelledby="edit-modal-label" aria-hidden="true" style="z-index: 1050">
           <div class="modal-dialog" style="max-width: 800px; width: 80%;">
           <div class="modal-content">
             <div class="modal-header">
             <h1 class="modal-title fs-5" id="edit-modal-label">Opret Konkurrence</h1>
-          
           </div>
           <div class="modal-body">
             <form id="create-competition-form">
@@ -55,14 +53,12 @@
                 class="btn btn-secondary"
                 data-bs-dismiss="modal"
                 id="close-modal-button">
-
                 Luk
               </button>
               <button type="submit" class="btn btn-primary">Opret</button>
             </form>
           </div>
               </div>
-            </div>
             </div>
           </div>
         </div>

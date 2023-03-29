@@ -8,24 +8,23 @@ import {
 
 const URL = API_URL + "/competitions";
 let locationId = null;
+const username = localStorage.getItem("username");
+const token = localStorage.getItem("token");
 
 export function initCompetitions() {
   if (checkAndRedirectIfNotLoggedIn()) {
     return;
   }
-  document
-    .getElementById("create-competition-button")
-    .addEventListener("click", createCompetition);
-  clearTable();
   showTable();
-  doubleClickRow();
+  const createCompetitionButton = document.getElementById("create-competition-button");
+  createCompetitionButton.removeEventListener("click", createCompetition);
+  createCompetitionButton.addEventListener("click", createCompetition);
 }
 
 async function showTable() {
+  clearTable();
   showLoading();
   try {
-    const username = localStorage.getItem("username");
-    const token = localStorage.getItem("token");
     const options = {
       method: "GET",
       headers: {
@@ -36,7 +35,7 @@ async function showTable() {
 
     const competitions = await fetch(URL, options).then((res) => res.json());
     createTable(competitions);
-    addSearchListener(competitions);
+    addRowListeners(competitions);
   } catch (err) {
     hideLoading();
     console.log(err.message);
@@ -47,8 +46,6 @@ async function showTable() {
 
 function fetchLocations() {
   try {
-    const username = localStorage.getItem("username");
-    const token = localStorage.getItem("token");
     const options = {
       method: "GET",
       headers: {
@@ -63,7 +60,7 @@ function fetchLocations() {
   }
 }
 
-function checkDates() {
+/*function checkDates() {
   const startDate = document.getElementById("start-date");
   const endDate = document.getElementById("end-date");
   const deadline = document.getElementById("deadline");
@@ -102,12 +99,40 @@ function checkDates() {
   deadline.addEventListener("input", () => {
     startDate.setAttribute("min", deadline.value);
   });
+}*/
+
+function checkDates() {
+  const startDate = document.getElementById("start-date");
+  const endDate = document.getElementById("end-date");
+  const deadline = document.getElementById("deadline");
+
+  const today = new Date().toISOString().split("T")[0];
+
+  startDate.setAttribute("min", today);
+  endDate.setAttribute("min", today);
+  endDate.setAttribute("max", "2050-01-01");
+
+  startDate.addEventListener("input", () => {
+    endDate.setAttribute("min", startDate.value);
+    deadline.setAttribute("max", startDate.value);
+  });
+
+  endDate.addEventListener("input", () => {
+    startDate.setAttribute("max", endDate.value);
+  });
+
+  deadline.addEventListener("input", () => {
+    startDate.setAttribute("min", deadline.value);
+  });
 }
 
-async function createCompetition() {
-  // Get the modal element
-  const modal = document.getElementById("create-competition-modal");
 
+async function createCompetition() {
+  const modal = new bootstrap.Modal(document.getElementById("competition-modal"), {
+    focus: true,
+    backdrop: false,
+  });
+  modal.show();
   // Get the form element
   const form = document.getElementById("create-competition-form");
 
@@ -120,10 +145,9 @@ async function createCompetition() {
   const competitionTypeField = document.getElementById("competition-type");
 
   // Fetch the locations and populate the locationField
-  const locations = await fetchLocations();
   locationField.innerHTML =
     '<option value="" disabled selected>Vælg on lokation</option>';
-
+  const locations = await fetchLocations();
   // Add the rest of the options
   locations.forEach((location) => {
     locationField.insertAdjacentHTML(
@@ -142,73 +166,54 @@ async function createCompetition() {
       defaultCompetitionType.charAt(0).toUpperCase() +
       defaultCompetitionType.slice(1)
     }</option>
-      <option value="finals">Finals</option>
+      <option value="FINALS">Finals</option>
     `;
   });
-  // Show the modal when the "Create Competition" button is clicked
-  modal.style.display = "block";
 
-  // Hide the modal when the user clicks on the close button
-  document
-    .getElementById("close-modal-button")
-    .addEventListener("click", () => {
-      modal.style.display = "none";
-    });
+  // Remove any existing "submit" event listeners
+  form.removeEventListener("submit", formSubmitHandler);
 
-  // Handle form submission
-  form.addEventListener("submit", async (event) => {
-    // Prevent the default form submission behavior
-    event.preventDefault();
-
-    const location = await getLocationById(locationField.value);
-
-    // Create a new CompetitionRequest object
-    const competition = {
-      startDate: startDateField.value,
-      endDate: endDateField.value,
-      deadline: deadlineField.value,
-      location: location,
-      competitionType: competitionTypeField.value,
-    };
-
-    // Submit the competition request to the server
-    const token = localStorage.getItem("token");
-    
-    const response = await fetch(API_URL + "/competitions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(competition),
-    });
-
-    if (response.ok) {
-      clearTable();
-      showTable();
-      clearCreateForm();
-
-      // The competition was created successfully
-      modal.style.display = "none";
-      // TODO: Show a success message to the user
-    } else {
-      // There was an error creating the competition
-      // TODO: Show an error message to the user
-    }
-  });
+  // Add a "submit" event listener
+  form.addEventListener("submit", formSubmitHandler);
 }
 
-function clearCreateForm() {
-  const dateInputs = document.querySelectorAll(".dates");
-  dateInputs.forEach((input) => {
-    input.value = "";
-  });
+async function formSubmitHandler(event) {
+  await saveCompetitions() 
+}
 
-  document.getElementById("competition-type").innerHTML = `<option></option>`;
+async function saveCompetitions(){
+  const competition = {
+    startDate: document.getElementById("start-date").value,
+    endDate: document.getElementById("end-date").value,
+    deadline: document.getElementById("deadline").value,
+    location: await getLocationById(document.getElementById("location").value),
+    competitionType: document.getElementById("competition-type").value,
+};
+const response = await fetch(API_URL + "/competitions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify(competition),
+});
+if (!response.ok) {
+  return;
+}
+initCompetitions();
+clearModalContent();
+const modal = bootstrap.Modal.getInstance(document.getElementById("competition-modal"));
+modal.hide();
+}
+
+
+
+function clearModalContent() {
+  const modal = document.getElementById("competition-modal");
+  modal.innerHTML = "";
 }
 
 async function getLocationById(id) {
-  const token = localStorage.getItem("token");
   const options = {
     method: "GET",
     headers: {
@@ -232,12 +237,11 @@ function createTable(competitions) {
     .map(
       (competition) => `
       <tr>
-        <td>${competition.id}</td>
+      <td>${competitionTypeTranslations[competition.competitionType]}</td>
+      <td>${competition.location.name}</td>
         <td>${competition.startDate}</td>
         <td>${competition.endDate}</td>
         <td>${competition.deadline}</td>
-        <td>${competitionTypeTranslations[competition.competitionType]}</td>
-        <td>${competition.location.name}</td>
       </tr>`
     )
     .join("");
@@ -249,31 +253,11 @@ function clearTable() {
   document.getElementById("table-rows").innerHTML = "";
 }
 
-function addSearchListener(competitions) {
-  const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    const filteredCompetitions = competitions.filter(
-      (competition) =>
-        Object.values(competition).some((value) =>
-          value.toString().toLowerCase().includes(searchTerm)
-        ) || competition.location.name.toLowerCase().includes(searchTerm)
-    );
-    showTable(filteredCompetitions);
-  });
-}
-
-function doubleClickRow() {
-  const table = document.querySelector(".table");
-  table.addEventListener("dblclick", function (event) {
-    const target = event.target.parentNode;
-    if (
-      target.tagName.toLowerCase() === "tr" &&
-      target.parentNode.tagName.toLowerCase() === "tbody"
-    ) {
-      // Handle double click on table row here
-      const id = target.querySelector("td:first-child").textContent;
-      router.navigate(`/add-participant/${id}`);
-    }
+function addRowListeners(competitions) {
+  const rows = document.querySelectorAll("#table-rows tr");
+  rows.forEach((row, index) => {
+    row.addEventListener("dblclick", () => {
+      router.navigate(`/add-participant/${competitions[index].id}`);
+    });
   });
 }

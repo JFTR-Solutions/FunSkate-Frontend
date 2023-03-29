@@ -25,6 +25,7 @@ export async function initAthletes() {
       showTable(athletes);
       addSearchListener(athletes);
       addRowListeners(athletes);
+      
     } catch (err) {
       hideLoading();
       console.log(err.message)
@@ -86,6 +87,7 @@ export async function initAthletes() {
     document.getElementById("edit-competitionNumber").value = athlete.competitionNumber;
     document.getElementById("edit-club-id").value = athlete.clubResponse.id;
     document.getElementById("edit-save-btn").onclick = () => saveEditAthlete(athlete);
+    //document.getElementById("delete-btn").onclick = () => deleteAthlete(athlete); //Need fix with Foreign Key constraint
 
 
     const modal = new bootstrap.Modal(document.getElementById("edit-modal"), {
@@ -151,5 +153,32 @@ async function fetchClub(id){
   } catch (error) {
     console.error(error);
     throw error;
+  }
+}
+
+async function deleteAthlete(athlete) {
+  try {
+    const confirmDelete = confirm("Er du sikker på at du vil slette den løber?");
+    if (!confirmDelete) {
+      return;
+    }
+    const response = await fetch(URL + `/${athlete.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error deleting athlete");
+    }
+    const modal = bootstrap.Modal.getInstance(document.getElementById("edit-modal"));
+    modal.hide();
+    initAthletes();
+    document.getElementById("edit-status").innerHTML = "";
+
+  } catch (error) {
+    document.getElementById("edit-status").innerHTML = `<span style="color:red;">${error.message}</span>`;
   }
 }

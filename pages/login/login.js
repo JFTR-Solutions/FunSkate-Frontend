@@ -3,6 +3,7 @@ import { API_URL } from "../../settings.js";
 import { sanitizeStringWithTableRows } from "../../utils.js";
 import { updateRestrictedLinks } from "../../auth.js";
 import { handleHttpErrors, encode } from "../../utils.js";
+import {hideLoading,showLoading} from "../../utils.js";
 
 const URL = API_URL + "/login";
 
@@ -18,6 +19,7 @@ export function initLogin() {
 }
 
 async function login(evt) {
+  
   document.getElementById("error").innerText = "";
 
   const username = document.getElementById("username").value;
@@ -30,6 +32,7 @@ async function login(evt) {
   };
 
   try {
+    showLoading();
     // Make a POST request to the login endpoint
     const response = await fetch(API_URL + "/auth/login", options).then((res) =>
       handleHttpErrors(res)
@@ -37,17 +40,18 @@ async function login(evt) {
     localStorage.setItem("username", response.username);
     const token = localStorage.setItem("token", response.token);
     localStorage.setItem("roles", JSON.stringify(response.roles));
-
+    updateRestrictedLinks();
     document.getElementById("login-id").style.display = "none";
     document.getElementById("logout-id").style.display = "block";
+    
     window.router.navigate("");
     location.reload();
-    updateRestrictedLinks(); // <-- Pass true to updateRestrictedLinks
     const loginBtn = document.getElementById("loginBtn");
     loginBtn.textContent = "Logout";
     loginBtn.onclick = logout;
     localStorage.removeItem("error");
   } catch (err) {
+    
     console.log(err.message);
     localStorage.setItem("error", err.message);
     document.getElementById("error").innerText = localStorage.getItem("error");
@@ -56,7 +60,7 @@ async function login(evt) {
 
 export function logout() {
   localStorage.clear();
-  updateRestrictedLinks(); // <-- Pass false to updateRestrictedLinks
+  updateRestrictedLinks();
   document.getElementById("login-id").style.display = "block";
   document.getElementById("logout-id").style.display = "none";
   window.location.href = "/";

@@ -6,20 +6,25 @@ const CLUB_URL = API_URL + "/clubs"
 
 let clubById = null;
 const token = localStorage.getItem("token");
+let clickEventHandler = function(event) {
+    event.preventDefault(); // prevent the default form submission behavior when clicking on the submit button
+    addAthlete();
+  };
 
 
 export async function initAddAthlete() {
     if (checkAndRedirectIfNotLoggedIn()) {
-        return;
-      }
-  clearInput();
-  clearMsg();
-  //document.getElementById("btn-submit-athlete").onclick = addAthlete; // This is the old way which doesn't work with the club select box
-  document.getElementById("btn-submit-athlete").addEventListener("click", function(event) {
-    event.preventDefault(); // prevent the default form submission behavior when clicking on the submit button
-    addAthlete();
-  });
-}
+      return;
+    }
+    clearInput();
+    clearMsg();
+  
+    // Remove the existing event listener before adding a new one
+    document.getElementById("btn-submit-athlete").removeEventListener("click", clickEventHandler);
+    
+    // Add the new event listener
+    document.getElementById("btn-submit-athlete").addEventListener("click", clickEventHandler);
+  }
 
 
 function fetchClub(){

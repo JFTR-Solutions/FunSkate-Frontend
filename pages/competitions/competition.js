@@ -1,5 +1,5 @@
 import { API_URL } from "../../settings.js";
-import { checkAndRedirectIfNotLoggedIn } from "../../auth.js";
+import { checkAndRedirectIfNotLoggedIn, updateRestrictedLinks } from "../../auth.js";
 import {
   hideLoading,
   sanitizeStringWithTableRows,
@@ -13,6 +13,7 @@ export function initCompetitions() {
   if (checkAndRedirectIfNotLoggedIn()) {
     return;
   }
+  updateRestrictedLinks()
   document
     .getElementById("create-competition-button")
     .addEventListener("click", createCompetition);

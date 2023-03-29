@@ -40,13 +40,12 @@ async function login(evt) {
     localStorage.setItem("username", response.username);
     const token = localStorage.setItem("token", response.token);
     localStorage.setItem("roles", JSON.stringify(response.roles));
-
+    updateRestrictedLinks();
     document.getElementById("login-id").style.display = "none";
     document.getElementById("logout-id").style.display = "block";
+    
     window.router.navigate("");
     location.reload();
-    hideLoading();
-    updateRestrictedLinks(); // <-- Pass true to updateRestrictedLinks
     const loginBtn = document.getElementById("loginBtn");
     loginBtn.textContent = "Logout";
     loginBtn.onclick = logout;
@@ -61,7 +60,7 @@ async function login(evt) {
 
 export function logout() {
   localStorage.clear();
-  updateRestrictedLinks(); // <-- Pass false to updateRestrictedLinks
+  updateRestrictedLinks();
   document.getElementById("login-id").style.display = "block";
   document.getElementById("logout-id").style.display = "none";
   window.location.href = "/";

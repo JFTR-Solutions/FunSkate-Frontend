@@ -1,8 +1,6 @@
 import { checkIfLoggedIn } from "../../auth.js";
 import { API_URL } from "../../settings.js";
-import {
-  sanitizeStringWithTableRows,
-} from "../../utils.js";
+import { sanitizeStringWithTableRows } from "../../utils.js";
 import { updateRestrictedLinks } from "../../auth.js";
 import { handleHttpErrors, encode } from "../../utils.js";
 
@@ -19,9 +17,7 @@ export function initLogin() {
   }
 }
 
-
 async function login(evt) {
-
   document.getElementById("error").innerText = "";
 
   const username = document.getElementById("username").value;
@@ -34,7 +30,6 @@ async function login(evt) {
   };
 
   try {
-
     // Make a POST request to the login endpoint
     const response = await fetch(API_URL + "/auth/login", options).then((res) =>
       handleHttpErrors(res)
@@ -51,13 +46,12 @@ async function login(evt) {
     const loginBtn = document.getElementById("loginBtn");
     loginBtn.textContent = "Logout";
     loginBtn.onclick = logout;
-    localStorage.removeItem("error")
+    localStorage.removeItem("error");
   } catch (err) {
     console.log(err.message);
     localStorage.setItem("error", err.message);
     document.getElementById("error").innerText = localStorage.getItem("error");
   }
-  location.reload();
 }
 
 export function logout() {

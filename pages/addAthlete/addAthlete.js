@@ -18,16 +18,17 @@ export async function initAddAthlete() {
     }
     clearInput();
     clearMsg();
-  
+  displayClubs();
     // Remove the existing event listener before adding a new one
-    document.getElementById("btn-submit-athlete").removeEventListener("click", clickEventHandler);
-    
+    const form = document.getElementById("form");
+    form.removeEventListener("submit", addAthlete);
+
     // Add the new event listener
-    document.getElementById("btn-submit-athlete").addEventListener("click", clickEventHandler);
+    form.addEventListener("submit", addAthlete);
   }
 
 
-function fetchClub(){
+async function fetchClub(){
     const id = document.getElementById("club-id").value
     const options = {
         headers: {
@@ -36,7 +37,7 @@ function fetchClub(){
         },
     };
 
-    return fetch(CLUB_URL+"/"+id, options)
+    return await fetch(CLUB_URL+"/"+id, options)
     .then(res => {
         return res.json()
     })
@@ -46,8 +47,50 @@ function fetchClub(){
     });
 }
 
+async function fetchClubIDFromAuth() {
+    const options = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    };
+    const id = await fetch(CLUB_URL + "/clubid", options).then((res) => res.json());
+    return id;
+}
 
-function addAthlete(){
+async function displayClubs() {
+    const club = await fetchClubIDFromAuth();
+
+    let isAdmin;
+    const userRole = localStorage.getItem("roles");
+    if (userRole.includes("ADMIN")) {
+        isAdmin = true;
+    } else {
+        isAdmin = false;
+    }
+
+    const clubSelect = document.querySelector("#club-id");
+    const clubOptions = clubSelect.querySelectorAll("option");
+
+
+    if (!isAdmin) {
+        for (let i = 0; i < clubOptions.length; i++) {
+            if (parseInt(clubOptions[i].value) !== club) {
+                clubOptions[i].style.display = "none";
+            } else {
+                clubOptions[i].selected = true;
+                clubSelect.disabled = true; 
+
+            }
+        }
+    }
+}
+
+
+
+
+function addAthlete(event){
+    event.preventDefault();
     fetchClub().then(clubData => { // Call fetchClub() and get the clubData
         const athlete = {
             firstName: encode(document.getElementById("first-name").value),

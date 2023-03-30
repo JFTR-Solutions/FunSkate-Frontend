@@ -197,7 +197,7 @@ function showTable(athletes) {
         
         <td><img src="/images/clubLogos/${
           athlete.clubResponse.id
-        }.png" width=60"></td>
+        }.png" height=25"></td>
       </tr>`
     )
     .join("");
@@ -236,7 +236,7 @@ function showParticipantTable(participatingAthletes) {
         }</td>
         <td><img src="/images/clubLogos/${
           partAthlete.athlete.clubResponse.id
-        }.png" width=60"></td>
+        }.png" height=25"></td>
         <td><button id="remove-part-${
           partAthlete.athlete.id
         }">Fjern fra konkurrencen</button></td>

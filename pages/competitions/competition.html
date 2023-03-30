@@ -1,20 +1,10 @@
-    <div class="template">
-      <button id="create-competition-button" data-bs-target="modal" class="btn btn-primary" style="margin-left: 45%;">Opret konkurrence</button>
-        <h1>Konkurrencer</h1>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Konkurrence type</th>
-              <th>Lokation</th>
-              <th>Start dato</th>
-              <th>Slut dato</th>
-              <th>Tilmeldingsfrist</th>
-            </tr>
-          </thead>
+
+      <div class="template">
+          <button id="create-competition-button" data-bs-target="modal" class="btn btn-primary" style="margin-left: 45%; margin-bottom: 40px;">Opret konkurrence</button>
           <div id="loading"></div>
-          <tbody id="table-rows"></tbody>
-        </table>
-        <p id="error" style="color:red"></p>
+          <p id="error" style="color:red"></p>
+          <div class="competition-grid"></div>
+        
     
         <!-- The modal -->
         <div class="modal fade" id="competition-modal" tabindex="-1" aria-labelledby="edit-modal-label" aria-hidden="true" style="z-index: 1050">

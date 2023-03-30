@@ -10,21 +10,34 @@
     z-index: 1000;
     display: none;
   }
-  
-  
-  .club-box {
+
+  .club-boxes-container {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid rgb(48, 48, 48);
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
-    position: relative;
-    transition: height 0.5s ease-in-out;
-    flex-basis: calc(25% - 20px);
   }
+
+  #club-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+ .club-box {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid rgb(48, 48, 48);
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+  position: relative;
+  transition: height 0.5s ease-in-out;
+  flex-basis: calc(33% - 20px); /* Adjust this value to control the width of the boxes */
+  max-width: 250px; /* Set a maximum width for the boxes */
+}
   
   .club-logo-container {
     width: 100%;
@@ -58,14 +71,31 @@
     text-align: center;
     font-size: 1.2em;
     text-shadow: 4px 4px 8px #ffffff;
-    transform: translate(-50%, -50%); /* center the .club-info element both horizontally and vertically */
+    transform: translate(-50%, -50%);
     transition: transform 0.5s ease-in-out;
   }
+
+  iframe#club-info {
+    width: 100%;
+    height: 500px;
+    border: none;
+  }
   
-  .club-box.expanded {
+  /*.club-box.expanded {
+    position: fixed;
+    z-index: 100;
     border-radius: 10px;
     box-shadow: none;
-    height: auto; /* set the height to auto to expand the box */
+    height: auto;
+    padding: 30px; 
+    background-color: #fff; 
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%, -50%); 
+  }*/
+
+  .club-box {
+    z-index: 1;
   }
   
   .admin-link,
@@ -113,4 +143,73 @@
   cursor: pointer;
 }
 
-  
+
+.competition-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 20px;
+}
+
+.competition-box {
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  max-width: 400px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.competition-box:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #c60B20;
+}
+
+.competition-box__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  color: #fff;
+}
+
+.competition-box__type {
+  font-size: 45px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.competition-box__location {
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-style: italic;
+}
+
+.competition-box__date {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.competition-box__deadline {
+  font-size: 16px;
+}
+
+.competition-box--finals:before {
+  background-color: #ffbf00;
+}
+
+.competition-box--east:before {
+  background-color: #c60B20;
+}
+
+.competition-box--west:before {
+  background-color: #21428e;
+}  

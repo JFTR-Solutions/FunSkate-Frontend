@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACQnW1uzItkHtoYm-jHQkX7ywFlAR8fr0&callback=initMap" async></script>
+</head>
+<body>
+  <h2 id="club-name"></h2>
+  <p><strong>Skøjtehal:</strong> <span id="club-locationName"></span></p>
+  <p><strong>Vej:</strong> <span id="club-streetName"></span></p>
+  <p><strong>By:</strong> <span id="club-city"></span></p>
+  <p><strong>Postnummer:</strong> <span id="club-zipCode"></span></p>
+  <div id="map"></div>
+  <script src="club-info.js"></script>
+  <script>
+    // Set club information from URL parameters
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    document.getElementById("club-name").textContent = urlParams.get("club-name");
+    document.getElementById("club-location-name").textContent = urlParams.get("location-name");
+    document.getElementById("club-street-name").textContent = urlParams.get("street-name");
+    document.getElementById("club-city").textContent = urlParams.get("city");
+    document.getElementById("club-zip-code").textContent = urlParams.get("zip-code");
+  </script>
+</body>
+</html>

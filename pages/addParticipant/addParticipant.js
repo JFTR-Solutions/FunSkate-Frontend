@@ -328,6 +328,11 @@ function showSignUpModal(id, athletesList) {
   clubMarkInput.removeEventListener("input", elementFreeFilter);
   clubMarkInput.addEventListener("input", elementFreeFilter);
 
+  updateSaveButtonState();
+  checkbox.removeEventListener("change", updateSaveButtonState);
+  freeSelect.removeEventListener("change", updateSaveButtonState);
+  checkbox.addEventListener("change", updateSaveButtonState);
+  freeSelect.addEventListener("change", updateSaveButtonState);
   document.getElementById("edit-save-btn").onclick = () =>
     saveParticipant(athlete);
 
@@ -336,6 +341,14 @@ function showSignUpModal(id, athletesList) {
     backdrop: false,
   });
   modal.show();
+}
+
+function updateSaveButtonState() {
+  const checkbox = document.getElementById("element-signup");
+  const freeSelect = document.getElementById("free-select");
+  const saveBtn = document.getElementById("edit-save-btn");
+
+  saveBtn.disabled = !checkbox.checked && freeSelect.value === "";
 }
 
 function elementFreeFilter() {

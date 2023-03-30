@@ -29,6 +29,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  min-width: 250px;
   margin: 10px;
   padding: 10px;
   border: 1px solid rgb(48, 48, 48);
@@ -37,6 +39,10 @@
   transition: height 0.5s ease-in-out;
   flex-basis: calc(33% - 20px); /* Adjust this value to control the width of the boxes */
   max-width: 250px; /* Set a maximum width for the boxes */
+}
+
+.club-box:hover {
+  transform: scale(1.07);
 }
   
   .club-logo-container {
@@ -81,18 +87,6 @@
     border: none;
   }
   
-  /*.club-box.expanded {
-    position: fixed;
-    z-index: 100;
-    border-radius: 10px;
-    box-shadow: none;
-    height: auto;
-    padding: 30px; 
-    background-color: #fff; 
-    left: 50%; 
-    top: 50%; 
-    transform: translate(-50%, -50%); 
-  }*/
 
   .club-box {
     z-index: 1;

@@ -30,13 +30,13 @@
             <label for="club-mark">Klubmærke</label>
           </div>
           <div class="col-md-10">
-            <input type=number id="club-mark">
+            <input min="2" max="7" type=number id="club-mark">
           </div>
           <div class="col-md-2">
             <label for="comp-number">Løbernummer</label>
           </div>
           <div class="col-md-10">
-            <input type=number id="comp-number">
+            <input type=number min="1" max="1000" id="comp-number">
           </div>
           <div class="col-md-2">
             <label for="comp-number">Klub</label>
@@ -72,7 +72,7 @@
         <div class="row">
           <p id="status" style="min-height: 1em;margin-top:0.5em;"> </p>
           <div style="margin-top:2em;">
-            <button id="btn-submit-athlete" class="btn btn-dark">Gem Løber</button>
+            <input type="submit" id="btn-submit-athlete" value="Gem Løber" class="btn btn-dark"></input>
           </div>
         </div>
       </form>

@@ -4,7 +4,7 @@ import {
   sanitizeStringWithTableRows,
   showLoading,
   convertToEuropeanDate,
-  convertToDanishRegionNames
+  convertToDanishRegionNames,
 } from "../../utils.js";
 
 let compId = "";
@@ -13,6 +13,8 @@ const URL = API_URL + "/competitions/";
 const athletesURL = API_URL + "/athletes";
 const eventParticipantURL = API_URL + "/event-participant";
 const CLUB_URL = API_URL + "/clubs/";
+const eventParticipantGroup_URL = API_URL + "/event-participant-group";
+
 let participatingAthleteIds;
 
 export async function initAddParticipant(match) {
@@ -26,7 +28,6 @@ export async function initAddParticipant(match) {
 async function setupCompDetails() {
   const compDetails = await fetchCompDetails();
   const euDate = convertToEuropeanDate(compDetails.startDate);
-  console.log(compDetails)
   document.getElementById("comp-details").innerHTML = `
 <h1>${compDetails.location.name}</h1>
 <div>Start dato: ${convertToEuropeanDate(
@@ -34,10 +35,11 @@ async function setupCompDetails() {
   )}<br>Slut dato: ${convertToEuropeanDate(
     compDetails.endDate
   )}<br>Tilmeldingsfrist: ${convertToEuropeanDate(compDetails.deadline)}
-  <br>Konkurrence type: ${convertToDanishRegionNames(compDetails.competitionType)}</div>
+  <br>Konkurrence type: ${convertToDanishRegionNames(
+    compDetails.competitionType
+  )}</div>
 `;
 }
-
 
 async function fetchCompDetails() {
   try {
@@ -103,7 +105,6 @@ function filterAthletes(athletes, participatingAthleteIds, competitionType) {
   return filteredAthletes;
 }
 
-
 async function fetchParticipatingAthletes() {
   //showLoading();
   try {
@@ -151,6 +152,20 @@ function addSearchListener(athletes) {
 function doubleClickRow(filteredAthletes) {
   const tables = document.querySelectorAll(".table");
   tables.forEach((table) => {
+    table.removeEventListener("dblclick", function (event) {
+      const target = event.target.parentNode;
+      if (
+        target.tagName.toLowerCase() === "tr" &&
+        target.parentNode.tagName.toLowerCase() === "tbody"
+      ) {
+        const tbodyId = target.parentNode.getAttribute("id");
+        const dataId = target.getAttribute("data-id");
+        if (tbodyId === "table-rows-not-part") {
+          showSignUpModal(dataId, filteredAthletes);
+        } else if (tbodyId === "table-rows-part") {
+        }
+      }
+    });
     table.addEventListener("dblclick", function (event) {
       const target = event.target.parentNode;
       if (
@@ -160,13 +175,8 @@ function doubleClickRow(filteredAthletes) {
         const tbodyId = target.parentNode.getAttribute("id");
         const dataId = target.getAttribute("data-id");
         if (tbodyId === "table-rows-not-part") {
-          // Handle double click on row in the 'table-rows-not-part' tbody
-          console.log("Clicked on row in 'table-rows-not-part'" + dataId);
           showSignUpModal(dataId, filteredAthletes);
         } else if (tbodyId === "table-rows-part") {
-          // Handle double click on row in the 'table-rows-part' tbody
-          console.log("Clicked on row in 'table-rows-part'" + dataId);
-          //showEditModal(dataId, participatingAthletes);
         }
       }
     });
@@ -184,6 +194,7 @@ function showTable(athletes) {
         <td>${athlete.clubMark}</td>
         <td>${athlete.competitionNumber}</td>
         <td>${athlete.clubResponse.abbreviation}</td>
+        
         <td><img src="/images/clubLogos/${
           athlete.clubResponse.id
         }.png" width=60"></td>
@@ -196,6 +207,7 @@ function showTable(athletes) {
 
 function showParticipantTable(participatingAthletes) {
   const tableRows = participatingAthletes
+
     .map(
       (partAthlete) => `
       <tr data-id="${partAthlete.athlete.id}">
@@ -204,7 +216,24 @@ function showParticipantTable(participatingAthletes) {
         <td>${convertToEuropeanDate(partAthlete.athlete.birthdate)}</td>
         <td>${partAthlete.athlete.clubMark}</td>
         <td>${partAthlete.athlete.competitionNumber}</td>
-        <td>${partAthlete.athlete.clubResponse.abbreviation}</td>
+        <td>${
+          partAthlete.eventParticipantGroup.freeSkateGroup
+            ? partAthlete.eventParticipantGroup.freeSkateGroup.name
+            : ""
+        }${
+        partAthlete.eventParticipantGroup.groupType &&
+        partAthlete.eventParticipantGroup.groupType !== "ELEMENT"
+          ? " - " + partAthlete.eventParticipantGroup.groupType
+          : ""
+      }</td>
+        <input id="groups-id" hidden value="${
+          partAthlete.eventParticipantGroup.id
+        }">
+        <td>${
+          partAthlete.eventParticipantGroup.elementSkateGroup
+            ? partAthlete.eventParticipantGroup.elementSkateGroup.name
+            : ""
+        }</td>
         <td><img src="/images/clubLogos/${
           partAthlete.athlete.clubResponse.id
         }.png" width=60"></td>
@@ -218,14 +247,20 @@ function showParticipantTable(participatingAthletes) {
   document.getElementById("table-rows-part").innerHTML = tableRowsSan;
   const removePartButtons = document.querySelectorAll('[id^="remove-part-"]');
   removePartButtons.forEach((button) => {
+    button.removeEventListener("click", () => {
+      const athleteId = button.parentNode.parentNode.dataset.id;
+      const groupId = document.getElementById("groups-id").value;
+      removePartFromComp(athleteId, groupId);
+    });
     button.addEventListener("click", () => {
       const athleteId = button.parentNode.parentNode.dataset.id;
-      removePartFromComp(athleteId);
+      const groupId = document.getElementById("groups-id").value;
+      removePartFromComp(athleteId, groupId);
     });
   });
 }
 
-async function removePartFromComp(id) {
+async function removePartFromComp(id, groupId) {
   const deleteURL = eventParticipantURL + "/delete/" + compId + "-" + id;
 
   try {
@@ -238,8 +273,21 @@ async function removePartFromComp(id) {
         Authorization: `Bearer ${token}`,
       },
     };
+    await removePartGroups(options, groupId);
     await fetch(deleteURL, options);
     console.log("It's deleted");
+    await updateTables();
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+async function removePartGroups(options, groupId) {
+  const deleteGroupURL = eventParticipantGroup_URL + "/delete/" + groupId;
+
+  try {
+    await fetch(deleteGroupURL, options);
+    console.log("Groups is deleted");
     await updateTables();
   } catch (err) {
     console.log(err.message);
@@ -257,15 +305,16 @@ function clearTables() {
 }
 
 function showSignUpModal(id, athletesList) {
-  console.log(athletesList);
   const athlete = athletesList.find((a) => a.id.toString() === id);
-  console.log(athlete);
   if (!athlete) {
     console.log(`Athlete with ID ${id} not found in the list`);
     return;
   }
 
-  console.log(athlete.clubResponse.name);
+  const checkbox = document.getElementById("element-signup");
+  checkbox.checked = false;
+  const freeSelect = document.getElementById("free-select");
+  freeSelect.value = "";
 
   document.getElementById("edit-lastName").value = athlete.lastName;
   document.getElementById("edit-firstName").value = athlete.firstName;
@@ -274,6 +323,10 @@ function showSignUpModal(id, athletesList) {
   document.getElementById("edit-competitionNumber").value =
     athlete.competitionNumber;
   document.getElementById("edit-club-name").value = athlete.clubResponse.name;
+  const clubMarkInput = document.getElementById("edit-clubMark");
+  elementFreeFilter();
+  clubMarkInput.removeEventListener("input", elementFreeFilter);
+  clubMarkInput.addEventListener("input", elementFreeFilter);
 
   document.getElementById("edit-save-btn").onclick = () =>
     saveParticipant(athlete);
@@ -285,10 +338,19 @@ function showSignUpModal(id, athletesList) {
   modal.show();
 }
 
+function elementFreeFilter() {
+  const free = document.getElementById("free");
+  const clubMark = document.getElementById("edit-clubMark").value;
+  const freeSelect = document.getElementById("free-select");
+  if (clubMark < 4) {
+    free.style.display = "none";
+    freeSelect.value = "";
+  } else {
+    free.style.display = "block";
+  }
+}
+
 async function saveParticipant(athlete) {
-  console.log(athlete.id);
-  console.log(compId);
-  console.log("Club id: " + athlete.clubResponse.id);
   const updatedAthlete = {
     id: athlete.id,
     lastName: athlete.lastName,
@@ -299,11 +361,7 @@ async function saveParticipant(athlete) {
     club: await fetchClub(athlete.clubResponse.id),
   };
 
-  console.log("Updated athlete: " + updatedAthlete);
-
   try {
-    console.log("Trying to save edited athlete");
-
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
 
@@ -333,9 +391,7 @@ async function saveParticipant(athlete) {
 }
 
 async function addParticipantToCompetition(updatedAthlete) {
-  console.log("Athlete details: " + updatedAthlete.lastName);
   const compDetails = await fetchCompDetails();
-  console.log("Comp details: " + compDetails.location.name);
   const eventParticipant = {
     athlete: updatedAthlete,
     competition: compDetails,
@@ -344,8 +400,11 @@ async function addParticipantToCompetition(updatedAthlete) {
   try {
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
+    const checkbox = document.getElementById("element-signup");
+    const freeSelect = document.getElementById("free-select").value;
 
-    const response = await fetch(eventParticipantURL, {
+
+    const response = await fetch(eventParticipantURL + `?element=${checkbox.checked}&free=${freeSelect}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -356,8 +415,7 @@ async function addParticipantToCompetition(updatedAthlete) {
     if (!response.ok) {
       throw new Error("Error adding athlete to competition");
     }
-    console.log("Added to comp");
-    await updateTables();
+    updateTables()
   } catch (error) {
     console.log(error.message);
   }
@@ -365,7 +423,6 @@ async function addParticipantToCompetition(updatedAthlete) {
 
 async function fetchClub(id) {
   try {
-    console.log(CLUB_URL + id);
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
     const options = {

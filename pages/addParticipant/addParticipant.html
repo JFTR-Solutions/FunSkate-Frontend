@@ -31,7 +31,9 @@
       <div class="modal-dialog" style="max-width: 800px; width: 80%">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="edit-modal-label">Rediger tilmeldt løber</h1>
+            <h1 class="modal-title fs-5" id="edit-modal-label">
+              Tilmeld løber
+            </h1>
             <button
               type="button"
               class="btn-close"
@@ -61,7 +63,7 @@
                   readonly="readonly"
                 />
               </div>
-              
+
               <div class="mb-3">
                 <label for="edit-birthdate" class="form-label"
                   >Fødselsdag</label
@@ -96,8 +98,43 @@
               </div>
               <div class="mb-3">
                 <label for="edit-club" class="form-label">Klub</label><br />
-                <input class="form-control" type="text" id="edit-club-name" required readonly="readonly"/>
-                <input hidden class="form-control" type="text" id="edit-club-id" required readonly="readonly"/>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="edit-club-name"
+                  required
+                  readonly="readonly"
+                />
+                <input
+                  hidden
+                  class="form-control"
+                  type="text"
+                  id="edit-club-id"
+                  required
+                  readonly="readonly"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="element-signup" class="form-label">Element</label
+                ><br />
+                <div class="form-check">
+                  <input
+                    id="element-signup"
+                    type="checkbox"
+                    class="form-check-input"
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3" id="free">
+                <label for="free-select" class="form-label">Free</label><br />
+                <select id="free-select" class="form-select">
+                  <option value="" selected>
+                    Deltager ikke i Free
+                  </option>
+                  <option value="SOLO">SOLO</option>
+                  <option value="DANCE">DANCE</option>
+                </select>
               </div>
             </form>
             <p id="edit-status">&nbsp;</p>
@@ -129,6 +166,8 @@
           <th>Fødselsdag</th>
           <th>Klubmærke</th>
           <th>Løbernummer</th>
+          <th>Free Gruppe</th>
+          <th>Element Gruppe</th>
           <th>Klub</th>
           <th></th>
           <th>Fjern fra konkurrencen</th>

@@ -60,7 +60,7 @@ function fetchLocations() {
   }
 }
 
-/*function checkDates() {
+function checkDates() {
   const startDate = document.getElementById("start-date");
   const endDate = document.getElementById("end-date");
   const deadline = document.getElementById("deadline");
@@ -96,31 +96,6 @@ function fetchLocations() {
   });
 
   // Update max date for deadline whenever deadline changes
-  deadline.addEventListener("input", () => {
-    startDate.setAttribute("min", deadline.value);
-  });
-}*/
-
-function checkDates() {
-  const startDate = document.getElementById("start-date");
-  const endDate = document.getElementById("end-date");
-  const deadline = document.getElementById("deadline");
-
-  const today = new Date().toISOString().split("T")[0];
-
-  startDate.setAttribute("min", today);
-  endDate.setAttribute("min", today);
-  endDate.setAttribute("max", "2050-01-01");
-
-  startDate.addEventListener("input", () => {
-    endDate.setAttribute("min", startDate.value);
-    deadline.setAttribute("max", startDate.value);
-  });
-
-  endDate.addEventListener("input", () => {
-    startDate.setAttribute("max", endDate.value);
-  });
-
   deadline.addEventListener("input", () => {
     startDate.setAttribute("min", deadline.value);
   });

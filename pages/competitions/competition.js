@@ -23,7 +23,6 @@ export function initCompetitions() {
 }
 
 async function showTable() {
-  clearTable();
   showLoading();
   try {
     const options = {
@@ -35,8 +34,8 @@ async function showTable() {
     };
 
     const competitions = await fetch(URL, options).then((res) => res.json());
-    createTable(competitions);
-    addRowListeners(competitions);
+    createCompetitionGrid(competitions);
+    addBoxListeners(competitions);
   } catch (err) {
     hideLoading();
     console.log(err.message);
@@ -149,7 +148,6 @@ async function createCompetition() {
   locationField.innerHTML =
     '<option value="" disabled selected>Vælg on lokation</option>';
   const locations = await fetchLocations();
-  // Add the rest of the options
   locations.forEach((location) => {
     locationField.insertAdjacentHTML(
       "beforeend",
@@ -171,7 +169,7 @@ async function createCompetition() {
     `;
   });
 
-  // Remove any existing "submit" event listeners
+  // Remove any existing "submit" event listeners as without it it will keep running and do doublicate requests
   form.removeEventListener("submit", formSubmitHandler);
 
   // Add a "submit" event listener
@@ -210,8 +208,10 @@ modal.hide();
 
 
 function clearModalContent() {
-  const modal = document.getElementById("competition-modal");
-  modal.innerHTML = "";
+  const form = document.getElementById("create-competition-form");
+  if (form) {
+    form.reset();
+  }
 }
 
 async function getLocationById(id) {
@@ -228,37 +228,60 @@ async function getLocationById(id) {
   return location;
 }
 
-function createTable(competitions) {
+
+function addBoxListeners(competitions) {
+  const boxes = document.querySelectorAll(".competition-box");
+  boxes.forEach((box, index) => {
+    box.addEventListener("dblclick", () => {
+      router.navigate(`/add-participant/${competitions[index].id}`);
+    });
+  });
+}
+
+function createCompetitionBox(competition) {
   const competitionTypeTranslations = {
     WEST: "Vest",
     EAST: "Øst",
     FINALS: "Finale",
   };
-  const tableRows = competitions
-    .map(
-      (competition) => `
-      <tr>
-      <td>${competitionTypeTranslations[competition.competitionType]}</td>
-      <td>${competition.location.name}</td>
-        <td>${competition.startDate}</td>
-        <td>${competition.endDate}</td>
-        <td>${competition.deadline}</td>
-      </tr>`
-    )
-    .join("");
-  const tableRowsSan = sanitizeStringWithTableRows(tableRows);
-  document.getElementById("table-rows").innerHTML = tableRowsSan;
+  const box = document.createElement("div");
+  box.className = `competition-box competition-box--${competition.competitionType.toLowerCase()}`;
+  const content = document.createElement("div");
+  content.className = "competition-box__content";
+  const type = document.createElement("div");
+  type.className = "competition-box__type";
+  type.textContent = competitionTypeTranslations[competition.competitionType];
+  const location = document.createElement("div");
+  location.className = "competition-box__location";
+  location.textContent = competition.location.name;
+  const startDate = document.createElement("div");
+  startDate.className = "competition-box__date";
+  startDate.textContent = "Start Dato: " + competition.startDate;
+  const endDate = document.createElement("div");
+  endDate.className = "competition-box__date";
+  endDate.textContent = "Slut Dato: " +competition.endDate;
+  const deadline = document.createElement("div");
+  deadline.className = "competition-box__deadline";
+  deadline.textContent = "Tilmeldingsfrist: " +competition.deadline;
+  content.appendChild(type);
+  content.appendChild(location);
+  content.appendChild(startDate);
+  content.appendChild(endDate);
+  content.appendChild(deadline);
+  box.appendChild(content);
+  return box;
 }
 
-function clearTable() {
-  document.getElementById("table-rows").innerHTML = "";
-}
+function createCompetitionGrid(competitions) {
+  const competitionGrid = document.querySelector(".competition-grid");
 
-function addRowListeners(competitions) {
-  const rows = document.querySelectorAll("#table-rows tr");
-  rows.forEach((row, index) => {
-    row.addEventListener("dblclick", () => {
-      router.navigate(`/add-participant/${competitions[index].id}`);
-    });
+  // Remove all child nodes
+  while (competitionGrid.firstChild) {
+    competitionGrid.removeChild(competitionGrid.firstChild);
+  }
+
+  competitions.forEach((competition) => {
+    const box = createCompetitionBox(competition);
+    competitionGrid.appendChild(box);
   });
 }
